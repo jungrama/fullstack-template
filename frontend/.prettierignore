@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+.nuxt
+.output
+dist
+.nitro
+
+# Generated files
+.nuxt/types
+.nuxt/tsconfig*.json
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
