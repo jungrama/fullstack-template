@@ -8,12 +8,12 @@ const database = process.env.POSTGRES_DB;
 
 const url =
   user && password && database
-    ? `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${database}?schema=public`
+    ? `postgresql://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${host}:${port}/${database}`
     : process.env.DATABASE_URL;
 
 if (!url) {
   throw new Error(
-    "Set POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB or DATABASE_URL for drizzle-kit"
+    "Set POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB or DATABASE_URL for drizzle-kit",
   );
 }
 

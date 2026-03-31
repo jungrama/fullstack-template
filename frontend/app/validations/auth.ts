@@ -59,6 +59,25 @@ export const getResetPasswordValidation = () => {
     });
 };
 
+export const getResetPasswordWithTokenValidation = () => {
+  const { t } = useI18n();
+
+  return z
+    .object({
+      password: z
+        .string(t("validation.required"))
+        .min(8, { message: t("validation.password_min", { min: 8 }) })
+        .max(50, { message: t("validation.password_max", { max: 50 }) }),
+      confirmPassword: z
+        .string(t("validation.required"))
+        .min(8, { message: t("validation.password_min", { min: 8 }) }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validation.password_mismatch"),
+      path: ["confirmPassword"],
+    });
+};
+
 export const getChangePasswordValidation = () => {
   const { t } = useI18n();
 
@@ -84,10 +103,15 @@ export type loginSchema = z.infer<ReturnType<typeof getLoginValidation>>;
 export type registerSchema = z.infer<ReturnType<typeof getRegisterValidation>>;
 export type forgotPasswordSchema = z.infer<ReturnType<typeof getForgotPasswordValidation>>;
 export type resetPasswordSchema = z.infer<ReturnType<typeof getResetPasswordValidation>>;
+export type resetPasswordWithTokenSchema = z.infer<
+  ReturnType<typeof getResetPasswordWithTokenValidation>
+>;
 export type changePasswordSchema = z.infer<ReturnType<typeof getChangePasswordValidation>>;
 
 export const toTypeLoginValidation = () => toTypedSchema(getLoginValidation());
 export const toTypeRegisterValidation = () => toTypedSchema(getRegisterValidation());
 export const toTypeForgotPasswordValidation = () => toTypedSchema(getForgotPasswordValidation());
 export const toTypeResetPasswordValidation = () => toTypedSchema(getResetPasswordValidation());
+export const toTypeResetPasswordWithTokenValidation = () =>
+  toTypedSchema(getResetPasswordWithTokenValidation());
 export const toTypeChangePasswordValidation = () => toTypedSchema(getChangePasswordValidation());

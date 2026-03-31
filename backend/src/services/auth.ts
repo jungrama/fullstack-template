@@ -1,0 +1,42 @@
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { db } from "../db";
+import { sendResetPasswordEmail, sendVerificationEmailMail } from "./email";
+
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "http://localhost:3092";
+
+export const auth = betterAuth({
+  database: drizzleAdapter(db, { provider: "pg" }),
+  secret: process.env.BETTER_AUTH_SECRET,
+  baseURL: process.env.BACKEND_ORIGIN,
+  basePath: "/api/auth",
+  trustedOrigins: [FRONTEND_ORIGIN],
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+    },
+  },
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+    sendResetPassword: async ({ user, url }) => {
+      await sendResetPasswordEmail({
+        to: user.email,
+        resetUrl: url,
+        userName: user.name ?? undefined,
+      });
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmailMail({
+        to: user.email,
+        verificationUrl: url,
+        userName: user.name ?? undefined,
+      });
+    },
+  },
+});

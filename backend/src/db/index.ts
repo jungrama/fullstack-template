@@ -14,7 +14,7 @@ if (!POSTGRES_USER || !POSTGRES_PASSWORD || !POSTGRES_DB) {
   );
 }
 
-const connectionString = `postgresql://${encodeURIComponent(POSTGRES_USER)}:${encodeURIComponent(POSTGRES_PASSWORD)}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public`;
-const client = postgres(connectionString);
+const connectionString = `postgresql://${encodeURIComponent(POSTGRES_USER)}:${encodeURIComponent(POSTGRES_PASSWORD)}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`;
+export const client = postgres(connectionString);
 
 export const db = drizzle(client, { schema });

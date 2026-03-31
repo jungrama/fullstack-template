@@ -25,7 +25,10 @@
       "signUp": "Sign up",
       "continueWithGoogle": "Continue with Google",
       "success": "Successfully signed in!",
-      "error": "Failed to sign in. Please check your credentials."
+      "error": "Failed to sign in. Please check your credentials.",
+      "emailNotVerified": "Your email is not verified yet. Check your inbox or resend the verification link.",
+      "resendVerification": "Resend verification email",
+      "resendVerificationSuccess": "Verification email sent. Check your inbox."
     },
     "register": {
       "title": "Create an account",
@@ -36,8 +39,10 @@
       "submit": "Sign up",
       "hasAccount": "Already have an account?",
       "signIn": "Sign in",
+      "emailAlreadyRegistered": "That email is already registered. Please sign in instead.",
       "continueWithGoogle": "Continue with Google",
       "success": "Account created successfully!",
+      "successDescription": "Please check your inbox for a verification email.",
       "error": "Failed to create account. Please try again."
     },
     "forgotPassword": {
@@ -45,6 +50,7 @@
       "subtitle": "Enter your email to receive a reset link",
       "email": "Email",
       "submit": "Send reset link",
+      "success": "If that email exists, we sent password reset instructions.",
       "backToSignIn": "Back to sign in"
     },
     "resetPassword": {
@@ -54,7 +60,9 @@
       "otp": "OTP",
       "password": "New password",
       "confirmPassword": "Confirm password",
-      "submit": "Reset password"
+      "submit": "Reset password",
+      "success": "Password updated successfully. Please sign in.",
+      "invalidToken": "Invalid or expired reset token. Please request a new reset link."
     },
     "changePassword": {
       "title": "Change password",

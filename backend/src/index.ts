@@ -6,7 +6,7 @@ import { openapi } from "@elysiajs/openapi";
 import { z } from "zod";
 import { logger, fileLogger } from "@bogeychan/elysia-logger";
 import { rateLimit } from "elysia-rate-limit";
-import { auth } from "./auth";
+import { auth } from "./services/auth";
 import { health } from "./routes/health";
 
 const PORT = Number(process.env.PORT) || 3000;
@@ -41,7 +41,7 @@ const app = new Elysia()
         const url = new URL(req.url);
         return url.pathname === "/" || url.pathname.startsWith("/openapi");
       },
-    })
+    }),
   )
   .use(
     cors({
@@ -49,7 +49,7 @@ const app = new Elysia()
       credentials: true,
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
-    })
+    }),
   )
   .use(
     openapi({
@@ -57,20 +57,20 @@ const app = new Elysia()
         info: { title: "Backend API", version: "1.0.0" },
       },
       mapJsonSchema: { zod: z.toJSONSchema },
-    })
+    }),
   )
   .use(betterAuthPlugin)
   .use(health)
-  .get(
-    "/me",
-    ({ user }) => user,
-    {
-      auth: true,
-      detail: { summary: "Get current user", description: "Returns the authenticated user (requires session)." },
-    }
-  )
+  .get("/me", ({ user }) => user, {
+    auth: true,
+    detail: {
+      summary: "Get current user",
+      description: "Returns the authenticated user (requires session).",
+    },
+  })
   .listen(PORT);
 
-app.server?.listening && console.log(`Backend running at http://localhost:${PORT}`);
+app.server?.listening &&
+  console.log(`Backend running at http://localhost:${PORT}`);
 
 export type App = typeof app;

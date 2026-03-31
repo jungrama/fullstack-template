@@ -12,16 +12,16 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     'shadcn-nuxt',
     [
-      '@vee-validate/nuxt', 
+      '@vee-validate/nuxt',
       {
         autoImports: true,
         componentNames: {
-          Form: "Form",
-          Field: "FormField",
-          FieldArray: "FormFieldArray",
-          ErrorMessage: "FormErrorMessage",
+          Form: 'Form',
+          Field: 'FormField',
+          FieldArray: 'FormFieldArray',
+          ErrorMessage: 'FormErrorMessage',
         },
-      }
+      },
     ],
     '@pinia/nuxt',
   ],
@@ -33,6 +33,9 @@ export default defineNuxtConfig({
         // The @source directive in CSS should handle this, but this ensures it works
       }) as any,
     ],
+    server: {
+      allowedHosts: ['dev.mainlabs.online'],
+    },
   },
   runtimeConfig: {
     public: {
@@ -51,10 +54,10 @@ export default defineNuxtConfig({
      * @link https://nuxt.com/docs/api/nuxt-config#alias
      * @default "@/components/ui"
      */
-    componentDir: '@/components/ui'
+    componentDir: '~/components/ui',
   },
   i18n: {
-    locales: [{ code: "en", name: "English", file: "en.json" }],
+    locales: [{ code: 'en', name: 'English', file: 'en.json' }],
     strategy: 'no_prefix',
   },
 })
