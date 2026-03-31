@@ -177,3 +177,30 @@ export async function sendResetPasswordEmail(
     html,
   })
 }
+
+export type SendDeleteAccountVerificationEmailParams = {
+  to: string
+  deleteUrl: string
+  userName?: string
+}
+
+export async function sendDeleteAccountVerificationEmail(
+  params: SendDeleteAccountVerificationEmailParams,
+): Promise<void> {
+  const html = renderTemplate(loadTemplate("verify-email-link.html"), {
+    ...emailDefaults(),
+    headline: "Confirm account deletion",
+    username: params.userName?.trim() || "there",
+    introMessage:
+      "We received a request to delete your account. Click the button below to confirm this irreversible action.",
+    verificationLink: params.deleteUrl,
+    ctaLabel: "Delete account",
+    expiryNote: "This delete confirmation link will expire soon.",
+  })
+
+  await sendHtmlEmail({
+    to: params.to,
+    subject: "Confirm account deletion",
+    html,
+  })
+}

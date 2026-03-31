@@ -76,6 +76,55 @@
       "success": "Successfully signed out!"
     }
   },
+  "account": {
+    "title": "Account settings",
+    "subtitle": "Manage your profile and account security.",
+    "profile": {
+      "title": "Profile",
+      "description": "Update your account profile information.",
+      "success": "Your profile has been updated."
+    },
+    "avatar": {
+      "label": "Profile photo",
+      "invalidType": "Please upload a valid image file."
+    },
+    "password": {
+      "success": "Your password has been updated."
+    },
+    "emailChange": {
+      "title": "Change email",
+      "description": "Set a new email address. You will receive a verification link.",
+      "newEmail": "New email",
+      "submit": "Change email",
+      "success": "Email change requested.",
+      "successDescription": "Please verify your new email from your inbox."
+    },
+    "connected": {
+      "title": "Connected accounts",
+      "description": "Manage your linked social providers.",
+      "empty": "No social accounts connected.",
+      "connected": "Connected",
+      "notConnected": "Not connected",
+      "link": "Link",
+      "unlink": "Unlink",
+      "linked": "Account linked.",
+      "unlinked": "Account unlinked.",
+      "linkGoogle": "Link Google account",
+      "noAction": "Managed automatically"
+    },
+    "danger": {
+      "title": "Danger zone",
+      "description": "Delete your account permanently. This action cannot be undone.",
+      "password": "Current password",
+      "confirmLabel": "Type DELETE to confirm",
+      "confirmPlaceholder": "DELETE",
+      "submit": "Delete account",
+      "success": "Your account has been deleted.",
+      "sendVerification": "Send delete confirmation email",
+      "verificationSent": "Delete confirmation email sent.",
+      "verificationSentDescription": "Check your inbox and click the link to complete account deletion."
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

@@ -7,6 +7,6 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="h-[100vh] bg-gray-100">
+  <div class="bg-background text-foreground h-[100vh]">
   </div>
 </template>

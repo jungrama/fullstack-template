@@ -78,12 +78,16 @@ const onSubmit = async (values: any) => {
 </script>
 
 <template>
-  <div class="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+  <div class="bg-muted relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
     <div class="w-full max-w-sm">
       <div :class="cn('flex flex-col gap-6')">
         <Card class="overflow-hidden p-0">
           <CardContent class="p-6 md:p-8">
-            <Form :validation-schema="validationSchema" class="flex flex-col gap-6" @submit="onSubmit">
+            <Form
+              :validation-schema="validationSchema"
+              class="flex flex-col gap-6"
+              @submit="onSubmit"
+            >
               <div class="flex flex-col items-center gap-2 text-center">
                 <h1 class="text-2xl font-bold">
                   {{ t('auth.resetPassword.title') }}

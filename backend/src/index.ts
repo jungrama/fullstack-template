@@ -3,11 +3,11 @@ import { join } from "node:path";
 import { Elysia, status } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
-import { z } from "zod";
 import { logger, fileLogger } from "@bogeychan/elysia-logger";
 import { rateLimit } from "elysia-rate-limit";
 import { auth } from "./services/auth";
 import { health } from "./routes/health";
+import { account } from "./routes/account";
 
 const PORT = Number(process.env.PORT) || 3000;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "http://localhost:3092";
@@ -56,11 +56,11 @@ const app = new Elysia()
       documentation: {
         info: { title: "Backend API", version: "1.0.0" },
       },
-      mapJsonSchema: { zod: z.toJSONSchema },
     }),
   )
   .use(betterAuthPlugin)
   .use(health)
+  .use(account)
   .get("/me", ({ user }) => user, {
     auth: true,
     detail: {

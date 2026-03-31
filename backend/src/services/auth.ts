@@ -1,7 +1,11 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db";
-import { sendResetPasswordEmail, sendVerificationEmailMail } from "./email";
+import {
+  sendDeleteAccountVerificationEmail,
+  sendResetPasswordEmail,
+  sendVerificationEmailMail,
+} from "./email";
 
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "http://localhost:3092";
 
@@ -37,6 +41,18 @@ export const auth = betterAuth({
         verificationUrl: url,
         userName: user.name ?? undefined,
       });
+    },
+  },
+  user: {
+    deleteUser: {
+      enabled: true,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        await sendDeleteAccountVerificationEmail({
+          to: user.email,
+          deleteUrl: url,
+          userName: user.name ?? undefined,
+        });
+      },
     },
   },
 });

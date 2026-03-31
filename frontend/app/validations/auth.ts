@@ -98,6 +98,41 @@ export const getChangePasswordValidation = () => {
     });
 };
 
+export const getAccountProfileValidation = () => {
+  const { t } = useI18n();
+
+  return z.object({
+    name: z
+      .string(t("validation.required"))
+      .min(2, { message: t("validation.name_min", { min: 2 }) })
+      .max(50, { message: t("validation.name_max", { max: 50 }) }),
+    email: z
+      .string(t("validation.required"))
+      .email({ message: t("validation.email_invalid") })
+      .min(2, { message: t("validation.email_min", { min: 2 }) })
+      .max(50, { message: t("validation.email_max", { max: 50 }) }),
+  });
+};
+
+export const getSetPasswordValidation = () => {
+  const { t } = useI18n();
+
+  return z
+    .object({
+      newPassword: z
+        .string(t("validation.required"))
+        .min(8, { message: t("validation.password_min", { min: 8 }) })
+        .max(50, { message: t("validation.password_max", { max: 50 }) }),
+      confirmNewPassword: z
+        .string(t("validation.required"))
+        .min(8, { message: t("validation.password_min", { min: 8 }) }),
+    })
+    .refine((data) => data.newPassword === data.confirmNewPassword, {
+      message: t("validation.password_mismatch"),
+      path: ["confirmNewPassword"],
+    });
+};
+
 
 export type loginSchema = z.infer<ReturnType<typeof getLoginValidation>>;
 export type registerSchema = z.infer<ReturnType<typeof getRegisterValidation>>;
@@ -107,6 +142,8 @@ export type resetPasswordWithTokenSchema = z.infer<
   ReturnType<typeof getResetPasswordWithTokenValidation>
 >;
 export type changePasswordSchema = z.infer<ReturnType<typeof getChangePasswordValidation>>;
+export type accountProfileSchema = z.infer<ReturnType<typeof getAccountProfileValidation>>;
+export type setPasswordSchema = z.infer<ReturnType<typeof getSetPasswordValidation>>;
 
 export const toTypeLoginValidation = () => toTypedSchema(getLoginValidation());
 export const toTypeRegisterValidation = () => toTypedSchema(getRegisterValidation());
@@ -115,3 +152,5 @@ export const toTypeResetPasswordValidation = () => toTypedSchema(getResetPasswor
 export const toTypeResetPasswordWithTokenValidation = () =>
   toTypedSchema(getResetPasswordWithTokenValidation());
 export const toTypeChangePasswordValidation = () => toTypedSchema(getChangePasswordValidation());
+export const toTypeAccountProfileValidation = () => toTypedSchema(getAccountProfileValidation());
+export const toTypeSetPasswordValidation = () => toTypedSchema(getSetPasswordValidation());

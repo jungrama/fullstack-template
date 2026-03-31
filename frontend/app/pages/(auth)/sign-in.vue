@@ -97,7 +97,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+  <div class="bg-muted relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
     <div class="w-full max-w-sm md:max-w-4xl">
       <div :class="cn('flex flex-col gap-4')">
         <Card class="overflow-hidden p-0">
@@ -194,9 +194,16 @@ onUnmounted(() => {
                   }}</span>
                   <div class="flex-1 border-t" />
                 </div>
-                <Button variant="outline" type="button" :disabled="isGoogleSubmitting" @click="onGoogleSignIn">
+                <Button
+                  variant="outline"
+                  type="button"
+                  :disabled="isGoogleSubmitting"
+                  @click="onGoogleSignIn"
+                >
                   <Icon name="devicon:google" />
-                  {{ isGoogleSubmitting ? t('common.loading') : t('auth.login.continueWithGoogle') }}
+                  {{
+                    isGoogleSubmitting ? t('common.loading') : t('auth.login.continueWithGoogle')
+                  }}
                 </Button>
                 <p class="text-muted-foreground text-center text-sm">
                   {{ t('auth.login.noAccount') }}
@@ -211,9 +218,13 @@ onUnmounted(() => {
         </Card>
         <p class="text-muted-foreground px-6 text-center text-sm">
           {{ t('legal.agreeToTermsPrefix') }}
-          <a href="#" class="underline underline-offset-2">{{ t('legal.termsOfService') }}</a>
+          <NuxtLink to="/terms-of-service" class="underline underline-offset-2">{{
+            t('legal.termsOfService')
+          }}</NuxtLink>
           and
-          <a href="#" class="underline underline-offset-2">{{ t('legal.privacyPolicy') }}</a
+          <NuxtLink to="/privacy-policy" class="underline underline-offset-2">{{
+            t('legal.privacyPolicy')
+          }}</NuxtLink
           >.
         </p>
       </div>

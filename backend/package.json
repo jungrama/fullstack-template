@@ -14,10 +14,12 @@
     "db:setup": "bun run db:reset && bun run db:migrate"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1020.0",
+    "@aws-sdk/s3-request-presigner": "^3.1020.0",
     "@bogeychan/elysia-logger": "^0.1.10",
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/openapi": "^1.4.0",
-    "better-auth": "^1.2.0",
+    "better-auth": "^1.4.18",
     "drizzle-orm": "^0.38.0",
     "elysia": "^1.2.0",
     "elysia-rate-limit": "^4.5.0",
@@ -29,8 +31,8 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.17",
     "@types/node": "^25.2.3",
+    "@types/nodemailer": "^6.4.17",
     "drizzle-kit": "^0.30.0",
     "typescript": "^5.7.0"
   }
