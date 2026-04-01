@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toTypeLoginValidation } from '@/validations/auth'
+import { useAuth } from '@/composables/services/useAuth'
 
 const { t } = useI18n()
 const { signIn, signInWithGoogle, resendVerificationEmail } = useAuth()
@@ -27,8 +28,7 @@ const onSubmit = async (values: any) => {
   try {
     const rememberMe: boolean = values.rememberMe === undefined ? true : !!values.rememberMe
     const result = await signIn(values.email, values.password, rememberMe)
-
-    if (!result.success) {
+    if (result.error) {
       const err = result.error as { code?: string; message?: string } | undefined
       if (err?.code === 'EMAIL_NOT_VERIFIED') {
         emailPendingVerification.value = values.email
@@ -57,7 +57,7 @@ const onResendVerification = async () => {
   isResendingVerification.value = true
   try {
     const result = await resendVerificationEmail(email)
-    if (!result.success) {
+    if (result.error) {
       addAlert('sign-in', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
@@ -69,6 +69,11 @@ const onResendVerification = async () => {
       status: 'success',
     })
     emailPendingVerification.value = null
+  } catch (error) {
+    addAlert('sign-in', {
+      title: useErrorMessage(error, t('errors.generic')).message,
+      status: 'error',
+    })
   } finally {
     isResendingVerification.value = false
   }
@@ -80,12 +85,17 @@ const onGoogleSignIn = async () => {
   isGoogleSubmitting.value = true
   try {
     const result = await signInWithGoogle()
-    if (!result.success) {
+    if (result.error) {
       addAlert('sign-in', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
       })
     }
+  } catch (error) {
+    addAlert('sign-in', {
+      title: useErrorMessage(error, t('errors.generic')).message,
+      status: 'error',
+    })
   } finally {
     isGoogleSubmitting.value = false
   }

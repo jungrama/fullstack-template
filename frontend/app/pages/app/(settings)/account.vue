@@ -4,6 +4,7 @@ import {
   toTypeChangePasswordValidation,
   toTypeSetPasswordValidation,
 } from '@/validations/auth'
+import { useAuth } from '@/composables/services/useAuth'
 
 const { t } = useI18n()
 const {
@@ -109,19 +110,25 @@ const setAlertError = (error: unknown) => {
 const resolveAvatarUrl = async (value?: string | null) => {
   if (!value) return null
   if (value.startsWith('http://') || value.startsWith('https://')) return value
-  const result = await getAvatarSignedUrl(value)
-  if (!result.success) return null
-  return result.data.url
+  try {
+    const result = await getAvatarSignedUrl(value)
+    if (!result.success || !result.data?.url) return null
+    return result.data.url
+  } catch {
+    return null
+  }
 }
 
 const loadAccounts = async () => {
   isLoadingAccounts.value = true
   try {
     const result = await listUserAccounts()
-    if (!result.success) {
+    if (result.error) {
       return
     }
     linkedAccounts.value = (result.data as ProviderAccount[]) ?? []
+  } catch (error) {
+    setAlertError(error)
   } finally {
     isLoadingAccounts.value = false
   }
@@ -165,7 +172,7 @@ const onSaveProfile = async (values: any) => {
     let uploadedAvatarKey: string | undefined
     if (selectedAvatarFile.value) {
       const uploadResult = await uploadAvatar(selectedAvatarFile.value)
-      if (!uploadResult.success) {
+      if (!uploadResult.success || !uploadResult.data?.url || !uploadResult.data?.key) {
         addAlert('account', {
           title: (uploadResult.error as { message?: string })?.message ?? t('errors.generic'),
           status: 'error',
@@ -180,7 +187,7 @@ const onSaveProfile = async (values: any) => {
       name: values.name.trim(),
       image: uploadedAvatarKey,
     })
-    if (!result.success) {
+    if (result.error) {
       addAlert('account', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
@@ -216,7 +223,7 @@ const onChangePassword = async (values: any) => {
       newPassword: values.newPassword,
       revokeOtherSessions: false,
     })
-    if (!result.success) {
+    if (result.error) {
       addAlert('account', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
@@ -227,6 +234,8 @@ const onChangePassword = async (values: any) => {
       title: t('account.password.success'),
       status: 'success',
     })
+  } catch (error) {
+    setAlertError(error)
   } finally {
     isChangingPassword.value = false
   }
@@ -250,6 +259,8 @@ const onSetPassword = async (values: any) => {
       title: 'Password has been set successfully.',
       status: 'success',
     })
+  } catch (error) {
+    setAlertError(error)
   } finally {
     isSettingPassword.value = false
   }
@@ -267,7 +278,7 @@ const onToggleProviderLink = async (providerId: string) => {
   providerActionLoading.value[id] = true
   try {
     const result = await linkSocialAccount(id)
-    if (!result.success) {
+    if (result.error) {
       addAlert('account', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
@@ -280,6 +291,8 @@ const onToggleProviderLink = async (providerId: string) => {
       title: t('account.connected.linked'),
       status: 'success',
     })
+  } catch (error) {
+    setAlertError(error)
   } finally {
     providerActionLoading.value[id] = false
   }
@@ -301,19 +314,23 @@ const onConfirmUnlinkProvider = async (providerId: string) => {
 }
 
 const onUnlinkAccount = async (providerId: string, accountId?: string) => {
-  const result = await unlinkAccount(providerId, accountId)
-  if (!result.success) {
+  try {
+    const result = await unlinkAccount(providerId, accountId)
+    if (result.error) {
+      addAlert('account', {
+        title: (result.error as { message?: string })?.message ?? t('errors.generic'),
+        status: 'error',
+      })
+      return
+    }
+    await loadAccounts()
     addAlert('account', {
-      title: (result.error as { message?: string })?.message ?? t('errors.generic'),
-      status: 'error',
+      title: t('account.connected.unlinked'),
+      status: 'success',
     })
-    return
+  } catch (error) {
+    setAlertError(error)
   }
-  await loadAccounts()
-  addAlert('account', {
-    title: t('account.connected.unlinked'),
-    status: 'success',
-  })
 }
 
 const onDeleteAccount = async () => {
@@ -322,7 +339,7 @@ const onDeleteAccount = async () => {
   isDeletingAccount.value = true
   try {
     const result = await sendDeleteAccountVerification()
-    if (!result.success) {
+    if (result.error) {
       addAlert('account', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
@@ -334,6 +351,8 @@ const onDeleteAccount = async () => {
       description: t('account.danger.verificationSentDescription'),
       status: 'success',
     })
+  } catch (error) {
+    setAlertError(error)
   } finally {
     isDeletingAccount.value = false
   }
@@ -361,9 +380,11 @@ onMounted(async () => {
 
 <template>
   <div class="mx-auto w-full max-w-3xl space-y-6">
-    <div>
-      <h1 class="text-2xl font-bold">{{ t('account.title') }}</h1>
-      <p class="text-muted-foreground mt-1 text-sm">{{ t('account.subtitle') }}</p>
+    <div class="flex items-start gap-3">
+      <div class="min-w-0 flex-1">
+        <h1 class="text-2xl font-bold">{{ t('account.title') }}</h1>
+        <p class="text-muted-foreground mt-1 text-sm">{{ t('account.subtitle') }}</p>
+      </div>
     </div>
 
     <div v-if="getAlert('account')" class="flex flex-col gap-2">
@@ -378,18 +399,35 @@ onMounted(async () => {
 
     <Tabs v-model="activeTab" class="space-y-5">
       <TabsList class="grid h-auto w-full grid-cols-2 gap-2 p-1 md:grid-cols-4">
-        <TabsTrigger value="profile">Profile</TabsTrigger>
-        <TabsTrigger value="security">Security</TabsTrigger>
-        <TabsTrigger value="connections">Connections</TabsTrigger>
-        <TabsTrigger value="danger">Danger Zone</TabsTrigger>
+        <TabsTrigger value="profile">
+          <Icon name="ph:user-circle" class="size-4" />
+          Profile
+        </TabsTrigger>
+        <TabsTrigger value="security">
+          <Icon name="ph:key" class="size-4" />
+          Security
+        </TabsTrigger>
+        <TabsTrigger value="connections">
+          <Icon name="ph:plugs-connected" class="size-4" />
+          Connections
+        </TabsTrigger>
+        <TabsTrigger value="danger">
+          <Icon name="ph:warning" class="size-4" />
+          Danger Zone
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value="profile">
         <Card>
           <CardContent>
             <div class="mb-4">
-              <h2 class="text-lg font-semibold">{{ t('account.profile.title') }}</h2>
-              <p class="text-muted-foreground text-sm">{{ t('account.profile.description') }}</p>
+              <h2 class="flex items-center gap-2 text-lg font-semibold">
+                <Icon name="ph:user-circle" class="text-primary size-5 shrink-0" />
+                {{ t('account.profile.title') }}
+              </h2>
+              <p class="text-muted-foreground mt-1 text-sm">
+                {{ t('account.profile.description') }}
+              </p>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -466,10 +504,11 @@ onMounted(async () => {
           <Card>
             <CardContent>
               <div class="mb-4">
-                <h2 class="text-lg font-semibold">
+                <h2 class="flex items-center gap-2 text-lg font-semibold">
+                  <Icon name="ph:key" class="text-primary size-5 shrink-0" />
                   {{ hasPasswordCredential ? t('auth.changePassword.title') : 'Set password' }}
                 </h2>
-                <p class="text-muted-foreground text-sm">
+                <p class="text-muted-foreground mt-1 text-sm">
                   {{
                     hasPasswordCredential
                       ? t('auth.changePassword.subtitle')
@@ -584,8 +623,13 @@ onMounted(async () => {
         <Card>
           <CardContent>
             <div class="mb-4">
-              <h2 class="text-lg font-semibold">{{ t('account.connected.title') }}</h2>
-              <p class="text-muted-foreground text-sm">{{ t('account.connected.description') }}</p>
+              <h2 class="flex items-center gap-2 text-lg font-semibold">
+                <Icon name="ph:plugs-connected" class="text-primary size-5 shrink-0" />
+                {{ t('account.connected.title') }}
+              </h2>
+              <p class="text-muted-foreground mt-1 text-sm">
+                {{ t('account.connected.description') }}
+              </p>
             </div>
             <div v-if="isLoadingAccounts" class="text-muted-foreground text-sm">
               {{ t('common.loading') }}
@@ -599,15 +643,24 @@ onMounted(async () => {
                 :key="provider.id"
                 class="flex items-center justify-between rounded-md border p-3"
               >
-                <div class="flex flex-col">
-                  <span class="text-sm font-medium capitalize">{{ provider.label }}</span>
-                  <span class="text-muted-foreground text-xs">
-                    {{
-                      isProviderLinked(provider.id)
-                        ? t('account.connected.connected')
-                        : t('account.connected.notConnected')
-                    }}
-                  </span>
+                <div class="flex items-center gap-2">
+                  <Icon
+                    name="material-icon-theme:google"
+                    size="24"
+                    v-if="provider.id === 'google'"
+                  />
+                  <Icon name="mdi:github" size="24" v-if="provider.id === 'github'" />
+                  <Icon name="ph:password-fill" size="24" v-if="provider.id === 'credential'" />
+                  <div class="flex flex-col">
+                    <span class="text-sm font-medium capitalize">{{ provider.label }}</span>
+                    <span class="text-muted-foreground text-xs">
+                      {{
+                        isProviderLinked(provider.id)
+                          ? t('account.connected.connected')
+                          : t('account.connected.notConnected')
+                      }}
+                    </span>
+                  </div>
                 </div>
                 <template v-if="provider.supportsLink">
                   <template v-if="isProviderLinked(provider.id)">
@@ -683,10 +736,13 @@ onMounted(async () => {
         <Card class="border-destructive/50 bg-destructive/1">
           <CardContent>
             <div class="mb-4">
-              <h2 class="text-destructive text-lg font-semibold">
+              <h2 class="text-destructive flex items-center gap-2 text-lg font-semibold">
+                <Icon name="ph:warning-octagon" class="size-5 shrink-0" />
                 {{ t('account.danger.title') }}
               </h2>
-              <p class="text-muted-foreground text-sm">{{ t('account.danger.description') }}</p>
+              <p class="text-muted-foreground mt-1 text-sm">
+                {{ t('account.danger.description') }}
+              </p>
             </div>
             <div class="mb-4 flex flex-col gap-2">
               <Label for="delete-confirm">{{ t('account.danger.confirmLabel') }}</Label>

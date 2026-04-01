@@ -15,142 +15,81 @@ export const useAuth = () => {
   })
 
   const signIn = async (email: string, password: string, rememberMe: boolean = true) => {
-    try {
-      const result = await authClient.signIn.email({
-        email,
-        password,
-        rememberMe: !!rememberMe,
-      })
+    const result = await authClient.signIn.email({
+      email,
+      password,
+      rememberMe: !!rememberMe,
+    })
 
-      if (result.error) {
-        return { success: false, error: result.error }
-      }
-
+    if (!result.error) {
       toast.success(t('auth.login.success') || 'Successfully signed in!')
-      await router.push('/')
-      return { success: true, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false, error: { message: errorMessage } }
+      await router.push('/app')
     }
+
+    return result
   }
 
   const signInWithGoogle = async () => {
-    const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/` : '/'
-
-    try {
-      const result = await authClient.signIn.social({
-        provider: 'google',
-        callbackURL,
-      })
-
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    const callbackURL =
+      typeof window !== 'undefined' ? `${window.location.origin}/app` : '/app'
+    return authClient.signIn.social({
+      provider: 'google',
+      callbackURL,
+    })
   }
 
   const signUp = async (name: string, email: string, password: string) => {
-    try {
-      const result = await authClient.signUp.email({
-        email,
-        password,
-        name,
-      })
+    const result = await authClient.signUp.email({
+      email,
+      password,
+      name,
+    })
 
-      if (result.error) {
-        return { success: false, error: result.error }
-      }
-
+    if (!result.error) {
       await router.push('/sign-in')
-      return { success: true, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false, error: { message: errorMessage } }
     }
+
+    return result
   }
 
   const signOut = async () => {
-    try {
-      await authClient.signOut()
-      toast.success(t('auth.logout.success') || 'Successfully signed out!')
-      await router.push('/sign-in')
-    } catch (error: any) {
-      toast.error(error?.message || t('errors.generic'))
-    }
+    await authClient.signOut()
+    toast.success(t('auth.logout.success') || 'Successfully signed out!')
+    await router.push('/sign-in')
   }
 
   const getSession = async () => {
-    try {
-      const session = await authClient.getSession()
-      return session
-    } catch (error) {
-      return null
-    }
+    return authClient.getSession()
   }
 
   const resendVerificationEmail = async (email: string) => {
     const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/` : '/'
 
-    const result = await authClient.sendVerificationEmail({
+    return authClient.sendVerificationEmail({
       email,
       callbackURL,
     })
-
-    if (result.error) {
-      return { success: false as const, error: result.error }
-    }
-
-    return { success: true as const, data: result.data }
   }
 
   const requestPasswordReset = async (email: string) => {
     const redirectTo =
       typeof window !== 'undefined' ? `${window.location.origin}/reset-password` : '/reset-password'
 
-    const result = await authClient.requestPasswordReset({
+    return authClient.requestPasswordReset({
       email,
       redirectTo,
     })
-
-    if (result.error) {
-      return { success: false as const, error: result.error }
-    }
-
-    return { success: true as const, data: result.data }
   }
 
   const resetPassword = async (token: string, newPassword: string) => {
-    const result = await authClient.resetPassword({
+    return authClient.resetPassword({
       token,
       newPassword,
     })
-
-    if (result.error) {
-      return { success: false as const, error: result.error }
-    }
-
-    return { success: true as const, data: result.data }
   }
 
   const updateAccount = async (payload: { name?: string; email?: string; image?: string | null }) => {
-    try {
-      const result = await authClient.updateUser(payload)
-
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    return authClient.updateUser(payload)
   }
 
   const changePassword = async (payload: {
@@ -158,201 +97,103 @@ export const useAuth = () => {
     newPassword: string
     revokeOtherSessions?: boolean
   }) => {
-    try {
-      const result = await authClient.changePassword(payload)
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    return authClient.changePassword(payload)
   }
 
   const setPassword = async (newPassword: string) => {
-    try {
-      const result = await $fetch<{ success: boolean; data?: unknown; error?: { message?: string } }>(
-        '/account/set-password',
-        {
-          method: 'POST',
-          baseURL: apiUrl,
-          credentials: 'include',
-          body: { newPassword },
-        },
-      )
-      if (!result.success) {
-        return {
-          success: false as const,
-          error: { message: result.error?.message || t('errors.generic') },
-        }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    const result = await $fetch<{ success: boolean; data?: unknown; error?: { message?: string } }>(
+      '/account/set-password',
+      {
+        method: 'POST',
+        baseURL: apiUrl,
+        credentials: 'include',
+        body: { newPassword },
+      },
+    )
+    return result
   }
 
   const uploadAvatar = async (file: File) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', file)
+    const formData = new FormData()
+    formData.append('file', file)
 
-      const result = await $fetch<{ success: boolean; data?: { url: string; key: string }; error?: { message?: string } }>(
-        '/account/avatar',
-        {
-          method: 'POST',
-          baseURL: apiUrl,
-          credentials: 'include',
-          body: formData,
-        },
-      )
+    const result = await $fetch<{ success: boolean; data?: { url: string; key: string }; error?: { message?: string } }>(
+      '/account/avatar',
+      {
+        method: 'POST',
+        baseURL: apiUrl,
+        credentials: 'include',
+        body: formData,
+      },
+    )
 
-      if (!result.success || !result.data?.url || !result.data?.key) {
-        return {
-          success: false as const,
-          error: { message: result.error?.message || t('errors.generic') },
-        }
-      }
-
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    return result
   }
 
   const getAvatarSignedUrl = async (key: string) => {
-    try {
-      const result = await $fetch<{ success: boolean; data?: { url: string }; error?: { message?: string } }>(
-        '/account/avatar-url',
-        {
-          method: 'GET',
-          baseURL: apiUrl,
-          credentials: 'include',
-          query: { key },
-        },
-      )
+    const result = await $fetch<{ success: boolean; data?: { url: string }; error?: { message?: string } }>(
+      '/account/avatar-url',
+      {
+        method: 'GET',
+        baseURL: apiUrl,
+        credentials: 'include',
+        query: { key },
+      },
+    )
 
-      if (!result.success || !result.data?.url) {
-        return {
-          success: false as const,
-          error: { message: result.error?.message || t('errors.generic') },
-        }
-      }
-
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    return result
   }
 
   const changeEmail = async (newEmail: string) => {
-    try {
-      const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/app/account` : '/app/account'
-      const result = await authClient.changeEmail({
-        newEmail,
-        callbackURL,
-      })
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/app/account` : '/app/account'
+    return authClient.changeEmail({
+      newEmail,
+      callbackURL,
+    })
   }
 
   const listUserAccounts = async () => {
-    try {
-      const client = authClient as any
-      const listAccountsHandler = client.listAccounts ?? client.listUserAccounts
-      if (!listAccountsHandler) {
-        return { success: false as const, error: { message: t('errors.generic') } }
-      }
-      const result = await listAccountsHandler()
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
+    const client = authClient as any
+    const listAccountsHandler = client.listAccounts ?? client.listUserAccounts
+    if (!listAccountsHandler) {
+      throw new Error(t('errors.generic'))
     }
+    return listAccountsHandler()
   }
 
   const linkSocialAccount = async (provider: string) => {
-    try {
-      const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/app/account` : '/app/account'
-      const client = authClient as any
-      const linkSocialHandler = client.linkSocial ?? client.linkSocialAccount
-      if (!linkSocialHandler) {
-        return { success: false as const, error: { message: t('errors.generic') } }
-      }
-      const result = await linkSocialHandler({
-        provider,
-        callbackURL,
-      })
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
+    const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/app/account` : '/app/account'
+    const client = authClient as any
+    const linkSocialHandler = client.linkSocial ?? client.linkSocialAccount
+    if (!linkSocialHandler) {
+      throw new Error(t('errors.generic'))
     }
+    return linkSocialHandler({
+      provider,
+      callbackURL,
+    })
   }
 
   const unlinkAccount = async (providerId: string, accountId?: string) => {
-    try {
-      const result = await authClient.unlinkAccount({
-        providerId,
-        accountId,
-      })
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    return authClient.unlinkAccount({
+      providerId,
+      accountId,
+    })
   }
 
   const deleteAccount = async (payload: { password?: string; token?: string }) => {
-    try {
-      const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/` : '/'
-      const result = await authClient.deleteUser({
-        callbackURL,
-        ...payload,
-      })
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/` : '/'
+    return authClient.deleteUser({
+      callbackURL,
+      ...payload,
+    })
   }
 
   const sendDeleteAccountVerification = async () => {
-    try {
-      const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/sign-in` : '/sign-in'
-      const result = await authClient.deleteUser({
-        callbackURL,
-      })
-      if (result.error) {
-        return { success: false as const, error: result.error }
-      }
-      return { success: true as const, data: result.data }
-    } catch (error: any) {
-      const errorMessage = error?.message || t('errors.generic')
-      return { success: false as const, error: { message: errorMessage } }
-    }
+    const callbackURL = typeof window !== 'undefined' ? `${window.location.origin}/sign-in` : '/sign-in'
+    return authClient.deleteUser({
+      callbackURL,
+    })
   }
 
   return {

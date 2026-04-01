@@ -25,6 +25,9 @@ export default defineNuxtConfig({
     ],
     '@pinia/nuxt',
   ],
+  imports: {
+    dirs: ['./app/composables/**'],
+  },
   css: ['~/assets/css/tailwind.css'],
   vite: {
     plugins: [

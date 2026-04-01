@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toTypeForgotPasswordValidation } from '@/validations/auth'
+import { useAuth } from '@/composables/services/useAuth'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -24,7 +25,7 @@ const onSubmit = async (values: any) => {
   isSubmitting.value = true
   try {
     const result = await requestPasswordReset(values.email)
-    if (!result.success) {
+    if (result.error) {
       addAlert('forgot-password', {
         title: result.error?.message || t('errors.generic'),
         status: 'error',

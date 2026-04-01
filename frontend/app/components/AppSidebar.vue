@@ -17,6 +17,7 @@ import NavMain from '@/components/NavMain.vue'
 import NavProjects from '@/components/NavProjects.vue'
 import NavUser from '@/components/NavUser.vue'
 import TeamSwitcher from '@/components/TeamSwitcher.vue'
+import { useAuth } from '@/composables/services/useAuth'
 
 import {
   Sidebar,
@@ -173,18 +174,22 @@ const resolveAvatarUrl = async (value?: string | null) => {
   if (!value) return null
   if (value.startsWith('http://') || value.startsWith('https://')) return value
   const result = await getAvatarSignedUrl(value)
-  if (!result.success) return null
+  if (!result.success || !result.data?.url) return null
   return result.data.url
 }
 
 onMounted(async () => {
   if (authUser.value) return
-  const session = await getSession()
-  if (!session?.data?.user) return
-  authUser.value = {
-    name: session.data.user.name ?? '',
-    email: session.data.user.email ?? '',
-    image: (await resolveAvatarUrl(session.data.user.image ?? null)) ?? null,
+  try {
+    const session = await getSession()
+    if (!session?.data?.user) return
+    authUser.value = {
+      name: session.data.user.name ?? '',
+      email: session.data.user.email ?? '',
+      image: (await resolveAvatarUrl(session.data.user.image ?? null)) ?? null,
+    }
+  } catch {
+    // Ignore sidebar hydration failures and keep fallback user data.
   }
 })
 </script>

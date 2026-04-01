@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from 'vue'
 import { cn } from '@/lib/utils'
 import { toTypeRegisterValidation } from '@/validations/auth'
+import { useAuth } from '@/composables/services/useAuth'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -22,11 +23,12 @@ const onSubmit = async (values: any) => {
   isSubmitting.value = true
   try {
     const result = await signUp(values.name, values.email, values.password)
-    if (!result.success) {
+    if (result.error) {
       addAlert('sign-up', {
         title: result.error?.message || t('errors.generic'),
         status: 'error',
       })
+      return
     }
 
     addAlert('sign-in', {
@@ -35,7 +37,9 @@ const onSubmit = async (values: any) => {
       status: 'success',
       persistent: true,
     })
-    navigateTo('/sign-in')
+    navigateTo({
+      name: 'sign-in',
+    })
   } catch (error) {
     addAlert('sign-up', {
       title: t('errors.generic'),
@@ -52,12 +56,17 @@ const onGoogleSignIn = async () => {
   isGoogleSubmitting.value = true
   try {
     const result = await signInWithGoogle()
-    if (!result.success) {
+    if (result.error) {
       addAlert('sign-up', {
         title: (result.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
       })
     }
+  } catch (error) {
+    addAlert('sign-up', {
+      title: useErrorMessage(error, t('errors.generic')).message,
+      status: 'error',
+    })
   } finally {
     isGoogleSubmitting.value = false
   }

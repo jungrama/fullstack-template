@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toTypeResetPasswordWithTokenValidation } from '@/validations/auth'
+import { useAuth } from '@/composables/services/useAuth'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -51,7 +52,7 @@ const onSubmit = async (values: any) => {
   isSubmitting.value = true
   try {
     const result = await resetPassword(resetToken.value, values.password)
-    if (!result.success) {
+    if (result.error) {
       addAlert('reset-password', {
         title: result.error?.message || t('errors.generic'),
         status: 'error',
