@@ -57,12 +57,7 @@ const emit = defineEmits<{
 <template>
   <div class="space-y-8">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div class="max-w-xl space-y-1">
-        <h1 class="text-2xl font-bold tracking-tight">{{ t('billing.title') }}</h1>
-        <p class="text-muted-foreground text-sm leading-relaxed">
-          {{ t('billing.subtitle') }}
-        </p>
-      </div>
+      <slot />
 
       <div
         class="bg-muted inline-flex shrink-0 rounded-full p-1"

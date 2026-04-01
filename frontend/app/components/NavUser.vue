@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from 'lucide-vue-next'
+import {
+  BadgeCheck,
+  ChevronsUpDown,
+  CreditCard,
+  LogOut,
+  Monitor,
+  Moon,
+  Sparkles,
+  Sun,
+} from 'lucide-vue-next'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -17,9 +26,18 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import BillingPricingPlans from '@/components/billing/BillingPricingPlans.vue'
+import {
+  Dialog,
+  DialogDescription,
+  DialogHeader,
+  DialogScrollContent,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { useAuth } from '@/composables/services/useAuth'
+import { cn } from '@/lib/utils'
 
-const props = defineProps<{
+defineProps<{
   user: {
     name: string
     email: string
@@ -27,8 +45,34 @@ const props = defineProps<{
   }
 }>()
 
+const { t } = useI18n()
 const { isMobile } = useSidebar()
 const { signOut } = useAuth()
+const { themePreference, setTheme } = useTheme()
+
+const upgradeModalOpen = ref(false)
+
+const closeUpgradeModal = () => {
+  upgradeModalOpen.value = false
+}
+
+const onPlanUpgrade = () => {
+  closeUpgradeModal()
+  navigateTo({ name: 'app-billing' })
+}
+
+const onPlanContact = () => {
+  closeUpgradeModal()
+  navigateTo({ name: 'app-billing' })
+}
+
+const segmentClass = (value: 'system' | 'light' | 'dark') =>
+  cn(
+    'flex size-8 items-center justify-center rounded-full transition-colors',
+    themePreference.value === value
+      ? 'bg-background text-foreground shadow-sm'
+      : 'text-muted-foreground hover:text-foreground'
+  )
 </script>
 
 <template>
@@ -52,8 +96,8 @@ const { signOut } = useAuth()
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-          :side="isMobile ? 'bottom' : 'right'"
+          class="w-[--reka-dropdown-menu-trigger-width] min-w-60 rounded-lg"
+          :side="isMobile ? 'bottom' : 'top'"
           align="end"
           :side-offset="4"
         >
@@ -71,7 +115,7 @@ const { signOut } = useAuth()
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem @click="upgradeModalOpen = true">
               <Sparkles />
               Upgrade to Pro
             </DropdownMenuItem>
@@ -86,11 +130,44 @@ const { signOut } = useAuth()
               <CreditCard />
               Billing
             </DropdownMenuItem>
-            <DropdownMenuItem @click="navigateTo({ name: 'app-notifications' })">
-              <Bell />
-              Notifications
-            </DropdownMenuItem>
           </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <div class="flex items-center justify-between gap-3 px-2 py-2">
+            <span class="text-sm font-medium">Theme</span>
+            <div
+              class="bg-muted/80 flex shrink-0 rounded-full p-0.5"
+              role="radiogroup"
+              aria-label="Theme"
+            >
+              <button
+                type="button"
+                role="radio"
+                :aria-checked="themePreference === 'system'"
+                :class="segmentClass('system')"
+                @click="setTheme('system')"
+              >
+                <Monitor class="size-4" />
+              </button>
+              <button
+                type="button"
+                role="radio"
+                :aria-checked="themePreference === 'light'"
+                :class="segmentClass('light')"
+                @click="setTheme('light')"
+              >
+                <Sun class="size-4" />
+              </button>
+              <button
+                type="button"
+                role="radio"
+                :aria-checked="themePreference === 'dark'"
+                :class="segmentClass('dark')"
+                @click="setTheme('dark')"
+              >
+                <Moon class="size-4" />
+              </button>
+            </div>
+          </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem @click="signOut">
             <LogOut />
@@ -98,6 +175,21 @@ const { signOut } = useAuth()
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <Dialog v-model:open="upgradeModalOpen">
+        <DialogScrollContent
+          class="bg-background max-w-5xl gap-6 border p-6 pt-12 shadow-lg sm:rounded-lg"
+        >
+          <BillingPricingPlans @upgrade="onPlanUpgrade" @contact="onPlanContact">
+            <div class="max-w-xl space-y-1">
+              <h1 class="text-2xl font-bold tracking-tight">{{ t('nav.upgradeModal.title') }}</h1>
+              <p class="text-muted-foreground text-sm leading-relaxed">
+                {{ t('nav.upgradeModal.description') }}
+              </p>
+            </div>
+          </BillingPricingPlans>
+        </DialogScrollContent>
+      </Dialog>
     </SidebarMenuItem>
   </SidebarMenu>
 </template>

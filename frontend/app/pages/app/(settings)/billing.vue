@@ -85,10 +85,19 @@ const onContact = () => {
 
 <template>
   <div class="mx-auto w-full max-w-6xl space-y-10 px-4 py-6 md:px-6">
-    <BillingPricingPlans @upgrade="onUpgrade" @contact="onContact" />
+    <BillingPricingPlans @upgrade="onUpgrade" @contact="onContact">
+      <div class="max-w-xl space-y-1">
+        <h1 class="text-2xl font-bold tracking-tight">{{ t('billing.title') }}</h1>
+        <p class="text-muted-foreground text-sm leading-relaxed">
+          {{ t('billing.subtitle') }}
+        </p>
+      </div>
+    </BillingPricingPlans>
 
     <Card class="shadow-sm">
-      <CardHeader class="flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <CardHeader
+        class="flex flex-col gap-4 border-b pb-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <h2 class="text-lg font-semibold">{{ t('billing.historyTitle') }}</h2>
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <InputGroup class="h-9 w-full sm:w-56">
@@ -140,18 +149,17 @@ const onContact = () => {
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="row in filteredRows"
-                :key="row.id"
-                class="border-b last:border-0"
-              >
+              <tr v-for="row in filteredRows" :key="row.id" class="border-b last:border-0">
                 <td class="px-6 py-3 font-medium">{{ row.planName }}</td>
                 <td class="text-muted-foreground px-6 py-3">{{ row.amount }}</td>
                 <td class="text-muted-foreground px-6 py-3">{{ row.purchaseDate }}</td>
                 <td class="text-muted-foreground px-6 py-3">{{ row.endDate }}</td>
                 <td class="px-6 py-3">
                   <span class="inline-flex items-center gap-2">
-                    <span class="size-2 shrink-0 rounded-full" :class="statusDotClass(row.status)" />
+                    <span
+                      class="size-2 shrink-0 rounded-full"
+                      :class="statusDotClass(row.status)"
+                    />
                     {{
                       row.status === 'processing'
                         ? t('billing.status.processing')

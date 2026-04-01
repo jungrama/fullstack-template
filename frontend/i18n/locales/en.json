@@ -193,6 +193,12 @@
       }
     }
   },
+  "nav": {
+    "upgradeModal": {
+      "title": "Upgrade to Pro",
+      "description": "Choose a plan that fits your team. You can change or cancel anytime."
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
