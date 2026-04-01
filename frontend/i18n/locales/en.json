@@ -14,7 +14,7 @@
   "auth": {
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign In to your Acme Inc account",
+      "subtitle": "Sign In to your {appName} account",
       "email": "Email",
       "password": "Password",
       "forgotPassword": "Forgot your password?",
@@ -153,9 +153,10 @@
       "starter": {
         "name": "Starter Plan",
         "badge": "FREE",
-        "priceMonthly": "$10.00",
-        "priceYearly": "$96.00",
+        "priceMonthly": "$0",
+        "priceYearly": "$0",
         "ctaCurrent": "Current Plan",
+        "ctaGetStarted": "Get started free",
         "features": [
           "Manage up to 1,000 contacts",
           "Basic customer management tools",
@@ -240,6 +241,8 @@
     "agreeToTerms": "By clicking continue, you agree to our {terms} and {privacy}.",
     "agreeToTermsPrefix": "By clicking continue, you agree to our",
     "lastUpdated": "Last updated",
+    "effectiveDate": "Effective date",
+    "onThisPage": "On this page",
     "privacy": {
       "introduction": "Introduction",
       "introText": "We respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information when you use our service.",
@@ -265,6 +268,7 @@
       "contactText": "If you have any questions about this privacy policy, please contact us through our support channels."
     },
     "terms": {
+      "importantNotice": "Important: Please read these terms carefully. By accessing or using our service, you agree to be bound by this agreement. If you do not agree, do not use the service.",
       "acceptance": "Acceptance of Terms",
       "acceptanceText": "By accessing and using our service, you accept and agree to be bound by the terms and conditions of this agreement. If you do not agree to these terms, you may not use our service.",
       "useOfService": "Use of Service",

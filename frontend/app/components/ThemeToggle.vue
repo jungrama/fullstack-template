@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Moon, Sun } from 'lucide-vue-next'
-
 const { theme, toggleTheme } = useTheme()
 const isMounted = ref(false)
 
@@ -17,7 +15,7 @@ onMounted(() => {
     :aria-label="theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
     @click="toggleTheme"
   >
-    <Sun v-if="isMounted && theme === 'dark'" class="size-4" />
-    <Moon v-else class="size-4" />
+    <Icon v-if="isMounted && theme === 'dark'" name="ph:sun" class="size-4" />
+    <Icon v-else name="ph:moon" class="size-4" />
   </Button>
 </template>

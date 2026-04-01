@@ -1,20 +1,7 @@
 <script setup lang="ts">
 import type { SidebarProps } from '@/components/ui/sidebar'
 
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-vue-next"
 import NavMain from '@/components/NavMain.vue'
-import NavProjects from '@/components/NavProjects.vue'
 import NavUser from '@/components/NavUser.vue'
 import TeamSwitcher from '@/components/TeamSwitcher.vue'
 import { useAuth } from '@/composables/services/useAuth'
@@ -28,138 +15,107 @@ import {
 } from '@/components/ui/sidebar'
 
 const props = withDefaults(defineProps<SidebarProps>(), {
-  collapsible: "icon",
+  collapsible: 'icon',
 })
+const config = useRuntimeConfig()
+const appName = computed(() => config.public.appName || 'FullstackApp')
 
 const { getSession, getAvatarSignedUrl } = useAuth()
-const authUser = useState<{ name: string; email: string; image?: string | null } | null>('auth-user', () => null)
+const authUser = useState<{ name: string; email: string; image?: string | null } | null>(
+  'auth-user',
+  () => null
+)
 
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: 'User',
+    email: 'user@notsignin.com',
+    avatar: '/avatars/shadcn.jpg',
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      name: appName.value,
+      logo: 'ph:stack',
+      plan: 'Enterprise',
     },
     {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
+      name: `${appName.value} Labs`,
+      logo: 'ph:waveform',
+      plan: 'Startup',
     },
     {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      name: 'Evil Corp.',
+      logo: 'ph:command',
+      plan: 'Free',
     },
   ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: 'Dashboard',
+      url: '#',
+      icon: 'ph:house',
       isActive: true,
+    },
+    {
+      title: 'My Projects',
+      url: '#',
+      icon: 'ph:laptop',
       items: [
         {
-          title: "History",
-          url: "#",
+          title: 'Project Planning',
+          url: '#',
         },
         {
-          title: "Starred",
-          url: "#",
+          title: 'Project Timeline',
+          url: '#',
         },
         {
-          title: "Settings",
-          url: "#",
+          title: 'Task List',
+          url: '#',
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: 'My Document',
+      url: '#',
+      icon: 'ph:file-text',
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: 'Introduction',
+          url: '#',
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: 'Get Started',
+          url: '#',
         },
         {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
+          title: 'Tutorials',
+          url: '#',
         },
         {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: 'Changelog',
+          url: '#',
         },
       ],
     },
   ],
-  projects: [
+  navSecondary: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      title: 'My Pages',
+      url: '#',
+      icon: 'ph:folder',
+      actionIcon: 'ph:plus',
+      items: [
+        {
+          title: 'Page 1',
+          url: '#',
+        },
+        {
+          title: 'Page 2',
+          url: '#',
+        },
+      ],
     },
   ],
 }
@@ -200,8 +156,8 @@ onMounted(async () => {
       <TeamSwitcher :teams="data.teams" />
     </SidebarHeader>
     <SidebarContent>
-      <NavMain :items="data.navMain" />
-      <NavProjects :projects="data.projects" />
+      <NavMain :items="data.navMain" label="Main" />
+      <NavMain :items="data.navSecondary" label="Pages" />
     </SidebarContent>
     <SidebarFooter>
       <NavUser :user="userData" />

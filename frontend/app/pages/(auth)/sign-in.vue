@@ -8,8 +8,11 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toTypeLoginValidation } from '@/validations/auth'
 import { useAuth } from '@/composables/services/useAuth'
+import { toast } from 'vue-sonner'
 
 const { t } = useI18n()
+const config = useRuntimeConfig()
+const appName = computed(() => config.public.appName || 'FullstackApp')
 const { signIn, signInWithGoogle, resendVerificationEmail } = useAuth()
 const { addAlert, clearAllAlerts, getAlert } = useAlert()
 const validationSchema = toTypeLoginValidation()
@@ -40,9 +43,12 @@ const onSubmit = async (values: any) => {
       }
       throw new Error(err?.message ?? t('errors.generic'))
     }
+
+    toast.success(t('auth.login.success'))
+    await navigateTo('/app')
   } catch (error) {
     addAlert('sign-in', {
-      title: useErrorMessage(error, t('errors.generic')).message,
+      title: useErrorMessage(error).message,
       status: 'error',
     })
   } finally {
@@ -71,7 +77,7 @@ const onResendVerification = async () => {
     emailPendingVerification.value = null
   } catch (error) {
     addAlert('sign-in', {
-      title: useErrorMessage(error, t('errors.generic')).message,
+      title: useErrorMessage(error).message,
       status: 'error',
     })
   } finally {
@@ -93,7 +99,7 @@ const onGoogleSignIn = async () => {
     }
   } catch (error) {
     addAlert('sign-in', {
-      title: useErrorMessage(error, t('errors.generic')).message,
+      title: useErrorMessage(error).message,
       status: 'error',
     })
   } finally {
@@ -103,6 +109,10 @@ const onGoogleSignIn = async () => {
 
 onUnmounted(() => {
   clearAllAlerts()
+})
+
+definePageMeta({
+  middleware: 'auth',
 })
 </script>
 
@@ -124,7 +134,7 @@ onUnmounted(() => {
                     {{ t('auth.login.title') }}
                   </h1>
                   <p class="text-muted-foreground text-balance">
-                    {{ t('auth.login.subtitle') }}
+                    {{ t('auth.login.subtitle', { appName }) }}
                   </p>
                 </div>
                 <div v-if="getAlert('sign-in')" class="flex flex-col gap-2">

@@ -1,12 +1,4 @@
 <script setup lang="ts">
-import type { LucideIcon } from "lucide-vue-next"
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-vue-next"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,7 +20,7 @@ defineProps<{
   projects: {
     name: string
     url: string
-    icon: LucideIcon
+    icon: string
   }[]
 }>()
 
@@ -42,14 +34,14 @@ const { isMobile } = useSidebar()
       <SidebarMenuItem v-for="item in projects" :key="item.name">
         <SidebarMenuButton as-child>
           <a :href="item.url">
-            <component :is="item.icon" />
+            <Icon :name="item.icon" class="size-4" />
             <span>{{ item.name }}</span>
           </a>
         </SidebarMenuButton>
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <SidebarMenuAction show-on-hover>
-              <MoreHorizontal />
+              <Icon name="ph:dots-three" class="size-4" />
               <span class="sr-only">More</span>
             </SidebarMenuAction>
           </DropdownMenuTrigger>
@@ -59,16 +51,16 @@ const { isMobile } = useSidebar()
             :align="isMobile ? 'end' : 'start'"
           >
             <DropdownMenuItem>
-              <Folder class="text-muted-foreground" />
+              <Icon name="ph:folder" class="text-muted-foreground size-4" />
               <span>View Project</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Forward class="text-muted-foreground" />
+              <Icon name="ph:share-fat" class="text-muted-foreground size-4" />
               <span>Share Project</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Trash2 class="text-muted-foreground" />
+              <Icon name="ph:trash" class="text-muted-foreground size-4" />
               <span>Delete Project</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -76,7 +68,7 @@ const { isMobile } = useSidebar()
       </SidebarMenuItem>
       <SidebarMenuItem>
         <SidebarMenuButton class="text-sidebar-foreground/70">
-          <MoreHorizontal class="text-sidebar-foreground/70" />
+          <Icon name="ph:dots-three" class="text-sidebar-foreground/70 size-4" />
           <span>More</span>
         </SidebarMenuButton>
       </SidebarMenuItem>

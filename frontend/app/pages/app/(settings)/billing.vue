@@ -4,10 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
-import { Download, Eye, Filter, Search, Upload } from 'lucide-vue-next'
-
 definePageMeta({
   name: 'app-billing',
+  breadcrumb: 'Billing',
 })
 
 const { t } = useI18n()
@@ -27,7 +26,7 @@ const rows = ref<BillingRow[]>([
   {
     id: '1',
     planName: 'Starter Plan - Jun 2024',
-    amount: '$10.00',
+    amount: '$0.00',
     purchaseDate: '2024-06-01',
     endDate: '2024-06-30',
     status: 'processing',
@@ -43,7 +42,7 @@ const rows = ref<BillingRow[]>([
   {
     id: '3',
     planName: 'Starter Plan - Apr 2024',
-    amount: '$10.00',
+    amount: '$0.00',
     purchaseDate: '2024-04-01',
     endDate: '2024-04-30',
     status: 'success',
@@ -84,7 +83,7 @@ const onContact = () => {
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-6xl space-y-10 px-4 py-6 md:px-6">
+  <div class="space-y-6">
     <BillingPricingPlans @upgrade="onUpgrade" @contact="onContact">
       <div class="max-w-xl space-y-1">
         <h1 class="text-2xl font-bold tracking-tight">{{ t('billing.title') }}</h1>
@@ -102,7 +101,7 @@ const onContact = () => {
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
           <InputGroup class="h-9 w-full sm:w-56">
             <InputGroupAddon>
-              <Search class="text-muted-foreground size-4" />
+              <Icon name="ph:magnifying-glass" class="text-muted-foreground size-4" />
             </InputGroupAddon>
             <Input
               v-model="searchQuery"
@@ -113,11 +112,11 @@ const onContact = () => {
           </InputGroup>
           <div class="flex gap-2">
             <Button type="button" variant="outline" size="sm" class="flex-1 sm:flex-none">
-              <Filter class="size-4" />
+              <Icon name="ph:funnel" class="size-4" />
               {{ t('common.filter') }}
             </Button>
             <Button type="button" variant="outline" size="sm" class="flex-1 sm:flex-none">
-              <Upload class="size-4" />
+              <Icon name="ph:upload-simple" class="size-4" />
               {{ t('billing.export') }}
             </Button>
           </div>
@@ -176,7 +175,7 @@ const onContact = () => {
                       class="size-8"
                       :aria-label="t('billing.downloadInvoice')"
                     >
-                      <Download class="size-4" />
+                      <Icon name="ph:download-simple" class="size-4" />
                     </Button>
                     <Button
                       type="button"
@@ -185,7 +184,7 @@ const onContact = () => {
                       class="size-8"
                       :aria-label="t('billing.viewDetails')"
                     >
-                      <Eye class="size-4" />
+                      <Icon name="ph:eye" class="size-4" />
                     </Button>
                   </div>
                 </td>

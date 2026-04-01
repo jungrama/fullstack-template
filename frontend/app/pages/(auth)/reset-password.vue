@@ -69,13 +69,17 @@ const onSubmit = async (values: any) => {
     await router.push('/sign-in')
   } catch (error) {
     addAlert('reset-password', {
-      title: useErrorMessage(error, t('errors.generic')).message,
+      title: useErrorMessage(error).message,
       status: 'error',
     })
   } finally {
     isSubmitting.value = false
   }
 }
+
+definePageMeta({
+  middleware: 'auth',
+})
 </script>
 
 <template>

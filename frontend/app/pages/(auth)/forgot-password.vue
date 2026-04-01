@@ -39,13 +39,17 @@ const onSubmit = async (values: any) => {
     })
   } catch (error) {
     addAlert('forgot-password', {
-      title: useErrorMessage(error, t('errors.generic')).message,
+      title: useErrorMessage(error).message,
       status: 'error',
     })
   } finally {
     isSubmitting.value = false
   }
 }
+
+definePageMeta({
+  middleware: 'auth',
+})
 </script>
 
 <template>

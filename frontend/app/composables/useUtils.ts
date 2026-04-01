@@ -1,5 +1,6 @@
-export const useErrorMessage = (error: any, fallbackMessage = 'Something went wrong') => {
+export const useErrorMessage = (error: any, fallbackMessage?: string) => {
   let errorResponse = null
+  const fallback = fallbackMessage || 'Something went wrong'
 
   // Check if the fetch using axios
   if (error?.name === 'AxiosError') {
@@ -11,6 +12,6 @@ export const useErrorMessage = (error: any, fallbackMessage = 'Something went wr
   }
 
   return {
-    message: errorResponse || fallbackMessage,
+    message: errorResponse || fallback,
   }
 }

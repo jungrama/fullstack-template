@@ -6,6 +6,11 @@ import {
 } from '@/validations/auth'
 import { useAuth } from '@/composables/services/useAuth'
 
+definePageMeta({
+  name: 'app-account',
+  breadcrumb: 'Account',
+})
+
 const { t } = useI18n()
 const {
   getSession,
@@ -247,9 +252,9 @@ const onSetPassword = async (values: any) => {
   isSettingPassword.value = true
   try {
     const result = await setPassword(values.newPassword)
-    if (!result.success) {
+    if (result?.error) {
       addAlert('account', {
-        title: (result.error as { message?: string })?.message ?? t('errors.generic'),
+        title: (result?.error as { message?: string })?.message ?? t('errors.generic'),
         status: 'error',
       })
       return
@@ -379,7 +384,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-3xl space-y-6">
+  <div class="mx-auto max-w-3xl space-y-6">
     <div class="flex items-start gap-3">
       <div class="min-w-0 flex-1">
         <h1 class="text-2xl font-bold">{{ t('account.title') }}</h1>

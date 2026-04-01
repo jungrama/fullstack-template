@@ -56,7 +56,10 @@ const emit = defineEmits<{
 
 <template>
   <div class="space-y-8">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div
+      class="flex flex-col justify-center gap-4 sm:flex-row sm:items-start sm:justify-between"
+      :class="{ '!justify-center': !$slots.default }"
+    >
       <slot />
 
       <div

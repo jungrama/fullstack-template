@@ -64,13 +64,17 @@ const onGoogleSignIn = async () => {
     }
   } catch (error) {
     addAlert('sign-up', {
-      title: useErrorMessage(error, t('errors.generic')).message,
+      title: useErrorMessage(error).message,
       status: 'error',
     })
   } finally {
     isGoogleSubmitting.value = false
   }
 }
+
+definePageMeta({
+  middleware: 'auth',
+})
 </script>
 
 <template>

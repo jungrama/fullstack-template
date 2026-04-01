@@ -43,6 +43,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL,
+      appName: process.env.NUXT_PUBLIC_APP_NAME || 'FullstackApp',
     },
   },
   shadcn: {

@@ -1,15 +1,4 @@
 <script setup lang="ts">
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Monitor,
-  Moon,
-  Sparkles,
-  Sun,
-} from 'lucide-vue-next'
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -36,6 +25,7 @@ import {
 } from '@/components/ui/dialog'
 import { useAuth } from '@/composables/services/useAuth'
 import { cn } from '@/lib/utils'
+import { toast } from 'vue-sonner'
 
 defineProps<{
   user: {
@@ -66,6 +56,12 @@ const onPlanContact = () => {
   navigateTo({ name: 'app-billing' })
 }
 
+const onSignOut = async () => {
+  await signOut()
+  toast.success(t('auth.logout.success'))
+  await navigateTo('/sign-in')
+}
+
 const segmentClass = (value: 'system' | 'light' | 'dark') =>
   cn(
     'flex size-8 items-center justify-center rounded-full transition-colors',
@@ -92,7 +88,7 @@ const segmentClass = (value: 'system' | 'light' | 'dark') =>
               <span class="truncate font-medium">{{ user.name }}</span>
               <span class="truncate text-xs">{{ user.email }}</span>
             </div>
-            <ChevronsUpDown class="ml-auto size-4" />
+            <Icon name="ph:caret-up-down" class="ml-auto size-4" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -116,18 +112,18 @@ const segmentClass = (value: 'system' | 'light' | 'dark') =>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem @click="upgradeModalOpen = true">
-              <Sparkles />
+              <Icon name="ph:sparkle" class="size-4" />
               Upgrade to Pro
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem @click="navigateTo({ name: 'app-account' })">
-              <BadgeCheck />
+              <Icon name="ph:seal-check" class="size-4" />
               Account
             </DropdownMenuItem>
             <DropdownMenuItem @click="navigateTo({ name: 'app-billing' })">
-              <CreditCard />
+              <Icon name="ph:credit-card" class="size-4" />
               Billing
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -146,7 +142,7 @@ const segmentClass = (value: 'system' | 'light' | 'dark') =>
                 :class="segmentClass('system')"
                 @click="setTheme('system')"
               >
-                <Monitor class="size-4" />
+                <Icon name="ph:monitor" class="size-4" />
               </button>
               <button
                 type="button"
@@ -155,7 +151,7 @@ const segmentClass = (value: 'system' | 'light' | 'dark') =>
                 :class="segmentClass('light')"
                 @click="setTheme('light')"
               >
-                <Sun class="size-4" />
+                <Icon name="ph:sun" class="size-4" />
               </button>
               <button
                 type="button"
@@ -164,13 +160,13 @@ const segmentClass = (value: 'system' | 'light' | 'dark') =>
                 :class="segmentClass('dark')"
                 @click="setTheme('dark')"
               >
-                <Moon class="size-4" />
+                <Icon name="ph:moon" class="size-4" />
               </button>
             </div>
           </div>
           <DropdownMenuSeparator />
-          <DropdownMenuItem @click="signOut">
-            <LogOut />
+          <DropdownMenuItem @click="onSignOut">
+            <Icon name="ph:sign-out" class="size-4" />
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>

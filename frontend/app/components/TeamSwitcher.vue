@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import type { Component } from "vue"
-
-import { ChevronsUpDown, Plus } from "lucide-vue-next"
 import { ref } from "vue"
 import {
   DropdownMenu,
@@ -23,7 +20,7 @@ import {
 const props = defineProps<{
   teams: {
     name: string
-    logo: Component
+    logo: string
     plan: string
   }[]
 }>()
@@ -42,7 +39,7 @@ const activeTeam = ref(props.teams[0])
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <component :is="activeTeam.logo" class="size-4" />
+              <Icon :name="activeTeam.logo" class="size-4" />
             </div>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">
@@ -50,7 +47,7 @@ const activeTeam = ref(props.teams[0])
               </span>
               <span class="truncate text-xs">{{ activeTeam.plan }}</span>
             </div>
-            <ChevronsUpDown class="ml-auto" />
+            <Icon name="ph:caret-up-down" class="ml-auto size-4" />
           </SidebarMenuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -69,7 +66,7 @@ const activeTeam = ref(props.teams[0])
             @click="activeTeam = team"
           >
             <div class="flex size-6 items-center justify-center rounded-sm border">
-              <component :is="team.logo" class="size-3.5 shrink-0" />
+              <Icon :name="team.logo" class="size-3.5 shrink-0" />
             </div>
             {{ team.name }}
             <DropdownMenuShortcut>⌘{{ index + 1 }}</DropdownMenuShortcut>
@@ -77,7 +74,7 @@ const activeTeam = ref(props.teams[0])
           <DropdownMenuSeparator />
           <DropdownMenuItem class="gap-2 p-2">
             <div class="flex size-6 items-center justify-center rounded-md border bg-transparent">
-              <Plus class="size-4" />
+              <Icon name="ph:plus" class="size-4" />
             </div>
             <div class="font-medium text-muted-foreground">
               Add team

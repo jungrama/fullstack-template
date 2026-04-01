@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Check } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -13,6 +12,8 @@ const props = withDefaults(
     badgeTone: BillingPricingBadgeTone
     priceDisplay: string
     periodLabel: string
+    /** When false, only the price line is shown (e.g. Enterprise “Custom”). */
+    showPeriod?: boolean
     features: string[]
     featured?: boolean
     ctaLabel: string
@@ -22,6 +23,7 @@ const props = withDefaults(
   {
     featured: false,
     disabled: false,
+    showPeriod: true,
   }
 )
 
@@ -138,6 +140,7 @@ const buttonClass = computed(() => {
           {{ priceDisplay }}
         </span>
         <span
+          v-if="showPeriod && periodLabel"
           :class="
             cn(
               'text-sm font-medium',
@@ -170,7 +173,7 @@ const buttonClass = computed(() => {
           class="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full"
           :class="featureIconWrap"
         >
-          <Check class="size-3 stroke-[2.5]" />
+          <Icon name="ph:check" class="size-3" />
         </span>
         <span :class="cn(featured ? 'text-zinc-200' : 'text-muted-foreground')">
           {{ feature }}
