@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LegalDocumentShell from '@/components/legal/LegalDocumentShell.vue'
-import type { LegalTocItem } from '@/components/legal/legal-doc'
+import LegalDocumentShell from '@/components/use/legal/LegalDocumentShell.vue'
+import type { LegalTocItem } from '~/components/use/legal/legal-doc'
 
 definePageMeta({
   layout: 'landing',

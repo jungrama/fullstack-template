@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ThemeToggle from '@/components/use/layout/ThemeToggle.vue'
+
 const mobileMenuOpen = ref(false)
 const config = useRuntimeConfig()
 

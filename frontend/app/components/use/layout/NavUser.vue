@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import BillingPricingPlans from '@/components/billing/BillingPricingPlans.vue'
+import BillingPricingPlans from '@/components/use/billing/BillingPricingPlans.vue'
 import {
   Dialog,
   DialogDescription,

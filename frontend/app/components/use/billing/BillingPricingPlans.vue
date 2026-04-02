@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BillingPricingCard from '@/components/billing/BillingPricingCard.vue'
+import BillingPricingCard from '@/components/use/billing/BillingPricingCard.vue'
 import { cn } from '@/lib/utils'
 
 const { t, tm } = useI18n()

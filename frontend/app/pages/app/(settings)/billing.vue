@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BillingPricingPlans from '@/components/billing/BillingPricingPlans.vue'
+import BillingPricingPlans from '@/components/use/billing/BillingPricingPlans.vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'

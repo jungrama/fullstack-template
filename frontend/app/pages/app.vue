@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import AppSidebar from '@/components/AppSidebar.vue'
+import AppSidebar from '@/components/use/layout/AppSidebar.vue'
+import NotificationDropdown from '@/components/use/layout/NotificationDropdown.vue'
 import { Button } from '@/components/ui/button'
 import {
   Breadcrumb,
@@ -29,8 +30,7 @@ function titleCaseSegment(segment: string) {
 const breadcrumbs = computed(() => {
   const normalized = route.path.replace(/\/$/, '') || '/'
   const base = '/app'
-  const leafFromMeta =
-    typeof route.meta.breadcrumb === 'string' ? route.meta.breadcrumb : undefined
+  const leafFromMeta = typeof route.meta.breadcrumb === 'string' ? route.meta.breadcrumb : undefined
 
   if (!normalized.startsWith(base)) {
     return [{ label: 'App' as const }]
@@ -55,10 +55,6 @@ const breadcrumbs = computed(() => {
 
 const onFeedback = () => {
   toast.message('Feedback', { description: 'Feedback is not wired up yet.' })
-}
-
-const onNotifications = () => {
-  toast.message('Notifications', { description: 'No new notifications.' })
 }
 </script>
 
@@ -96,17 +92,9 @@ const onNotifications = () => {
             aria-label="Send feedback"
             @click="onFeedback"
           >
-            <Icon name="ph:chat-circle-dots" class="size-5" />
+            <Icon name="ph:chat-circle-dots-fill" size="20" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            class="text-muted-foreground"
-            aria-label="Notifications"
-            @click="onNotifications"
-          >
-            <Icon name="ph:bell" class="size-5" />
-          </Button>
+          <NotificationDropdown />
         </div>
       </header>
       <div class="mx-auto w-full max-w-6xl p-4">
