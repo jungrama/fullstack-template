@@ -1,0 +1,81 @@
+---
+description: Premium UI standards from docs/design-rules.md; always applied to agent context
+alwaysApply: true
+---
+
+Design rules for all `frontend/` UI. **Canonical source:** `docs/design-rules.md`. Regenerate this rule after editing the doc:
+
+---
+
+# Design quality requirements
+
+The UI must **not** look like a basic Tailwind template.
+
+## Avoid
+
+- Flat layouts
+- Equal spacing everywhere
+- Generic card grids
+- Default Tailwind look
+
+## Instead
+
+- Strong visual hierarchy (clear primary vs secondary focus)
+- Varied spacing (not everything evenly spaced)
+- Large, confident typography for headings
+- More breathing room (whitespace)
+- Fewer borders; rely on spacing instead
+- Subtle contrast (background layering)
+
+## Product feeling
+
+Target: **premium**, **calm**, **focused**, **trustworthy** (legal industry).
+
+Reference feeling: **Apple**, **Linear**, **Stripe dashboard**.
+
+Do **not** overuse borders, shadows, or colors.
+
+## Layout composition
+
+- Asymmetric layout (not everything perfectly centered)
+- Max-width containers around **900px–1100px**
+- Large vertical spacing between sections (**py-16** to **py-24**)
+- Group related elements tightly
+- Separate sections with whitespace, not borders
+
+### Dashboard
+
+- Do **not** use simple grid cards only
+- Use larger cards with more breathing room
+- Highlight the primary action clearly
+
+### Editor
+
+- Canvas should feel dominant
+- Sidebars should feel secondary (lighter visual weight)
+
+## Typography
+
+- Headings: strong and confident; larger than defaults:
+  - **h1:** `text-4xl` or `text-5xl`
+  - **h2:** `text-2xl` or `text-3xl`
+- Body: `text-base` or `text-lg`, relaxed line height
+- Contrast: headings dark; secondary text muted
+
+Avoid small cramped text and too many font sizes.
+
+## Buttons
+
+- Primary: must stand out clearly; gradient + depth; subtle scale on hover — not flat
+- Secondary: minimal, low emphasis
+
+## Polish checklist
+
+- Reduce visual noise
+- Improve spacing and hierarchy
+- Make layout feel intentional
+- Increase whitespace
+- Improve typography scale
+- Remove unnecessary borders and boxes
+
+Aim for **high-end SaaS** quality (Stripe / Linear level).

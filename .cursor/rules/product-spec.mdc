@@ -1,0 +1,328 @@
+**Vibecoder PRD (Product Requirements Document)**  
+**Version:** 1.0  
+**Date:** April 2026  
+**Author:** Grok (assisted by Jung Rama)  
+**Tech Stack (mandated):** Bun (runtime) + Nuxt 4 (full-stack)  
+**Goal:** Give Cursor (or any AI coding agent) a single, crystal-clear document so it can build **exactly** what you described without deviation.
+
+---
+
+### 1. Product Vision
+
+**Vibecoder** is an AI-first web app that turns a vague “vibe/idea” into a fully documented, actionable MVP in minutes.  
+It replaces chaotic brainstorming with a structured interview → documentation → ordered task list → agent-ready prompts pipeline.
+
+**Tagline:** “From vibe to shipped. Step by step. No more staring at a blank editor.”
+
+---
+
+### 2. Target User
+
+- Solo developers / indie hackers / “vibe coders”
+- Product people who have ideas but struggle with structure
+- Teams that want a single source of truth before touching Cursor/Claude
+
+---
+
+### 3. Core User Flow (High-Level)
+
+1. **New Project** → Interview (static form + dynamic AI chat)
+2. **AI generates documentation in 3 distinct model hits** (Project + Goals → Design Guidelines → Tech Stack)
+3. **User approves / iterates**
+4. **Generate ordered MVP Task List**
+5. **User edits or asks AI to regenerate/adjust**
+6. **“Add Prompt to Task”** for every task (AI-generated agent-ready prompt)
+7. **Export / Connect** → Cursor, Claude, or any external AI agent can pick up the tasks + prompts (this is the “MCP” feature)
+
+---
+
+### 4. Detailed Requirements
+
+#### 4.1 Phase 1 – Interview & Documentation Generation (Your priority – fully detailed here)
+
+**4.1.1 Interview Process**
+
+**Static Questions (first screen – form, mandatory):**
+
+1. Project Title / Working Name
+2. One-sentence vibe / elevator pitch
+3. Detailed description (textarea, min 100 words encouraged)
+4. Target users / audience (multi-select + “other” free text)
+   - Examples: Developers, Designers, Students, Small businesses, Gen-Z, etc.
+5. Core problem this solves (what pain point?)
+6. Main success metric / goal of the project (what does “done” look like?)
+7. **Design Vibe Selector** (this is what you meant by “what user select at first”)
+   - Cards with previews: Minimal, Vibrant, Professional, Playful, Futuristic, Brutalist, Glassmorphic, Retro, Dark Academia, etc.
+   - User can pick 1 primary + up to 2 secondary vibes
+8. Any hard constraints? (time, budget, preferred platforms: web/mobile/desktop, existing tech you love/hate)
+9. Any existing assets? (Figma link, repo, Notion, etc.)
+
+**Dynamic Questions (AI Interviewer – conversational chat after static form):**
+After user submits static answers, the app opens a **real-time AI chat** (streaming via OpenRouter).
+
+**AI Rules for dynamic questions (hard-coded system prompt):**
+
+- Ask maximum 3–5 clarifying questions per turn.
+- Never ask generic questions — always reference previous answers.
+- Goal = fill gaps in scope, priorities, edge cases, non-functional requirements, user journey, success criteria.
+- Examples of dynamic questions the AI will generate:
+  - “You mentioned the target is ‘small businesses’. Are they non-technical? Should the UI be extremely simple?”
+  - “You want it built fast — are you open to using Supabase/Firebase or do you prefer self-hosted Postgres?”
+  - “You said ‘vibrant’ design. Should we lean more toward playful illustrations or bold typography + gradients?”
+  - “Any must-have features vs nice-to-have? Please rank the top 3 features you described.”
+- User can type “done” or click “Finish Interview” at any time → AI summarizes what it learned and asks for final confirmation.
+
+**4.1.2 Documentation Generation (3 distinct model hits)**
+
+After interview ends, user clicks **“Generate Documentation”**.
+
+The backend orchestrates **exactly 3 separate OpenRouter calls** for quality:
+
+**Hit 1 – Project Overview & Main Goals**  
+Model call #1 → Output:
+
+- Project Name (polished)
+- One-paragraph description
+- Main Goal + 3–5 Success Metrics
+- Key Stakeholders / Users
+
+**Hit 2 – Design Guidelines**  
+Model call #2 (receives Hit 1 + original design vibe selection + interview data) → Output:
+
+- Color palette (with hex codes + rationale)
+- Typography scale
+- Component library recommendations (shadcn/ui, Nuxt UI, etc.)
+- Layout philosophy
+- Accessibility & motion guidelines
+- Moodboard-style description
+
+**Hit 3 – Tech Stack**  
+Model call #3 (receives previous two outputs + constraints) → Output:
+
+- Full recommended stack (frontend, backend, DB, auth, deployment, etc.)
+- Why each choice (cost, speed, maintainability, your existing skills)
+- Folder structure recommendation
+- Any third-party services
+
+**UI for this stage:**
+
+- Three tabs/sections that populate one by one (with loading skeletons).
+- Each section has **“Regenerate”** button (triggers only that hit again).
+- User can edit any text directly (rich markdown editor).
+- Final **“Approve Documentation”** button (locks the brief).
+
+#### 4.2 Phase 2 – MVP Task List
+
+After approval:
+
+- Big button **“Generate MVP Task List”**
+- AI creates ordered, dependency-aware list (e.g. 15–30 tasks).
+- Each task contains:
+  - Title
+  - Description
+  - Acceptance criteria (bullet list)
+  - Estimated effort (small/medium/large)
+  - Dependencies (other task IDs)
+
+User can:
+
+- Drag & drop to reorder
+- Add / delete / edit tasks
+- Click **“Regenerate entire list”** or **“Ask AI to adjust this section”** (chat opens with context of current list)
+
+#### 4.3 Phase 3 – “Add a Prompt to Task”
+
+For every task there is a button **“Add Prompt to Task”** (or “Enhance for Agent”).
+
+- AI generates a **highly detailed, agent-ready prompt** that Cursor / Claude / Windsurf / etc. can consume directly.
+- Prompt includes:
+  - Exact task context from the approved documentation
+  - Relevant design guidelines
+  - Tech stack rules
+  - File structure references
+  - Acceptance criteria as test checklist
+  - “You are an expert full-stack engineer using Bun + Nuxt 4…”
+
+User can edit the prompt before saving.
+
+#### 4.4 MCP / External AI Agent Integration (the “mcp” you mentioned)
+
+**Feature name in UI:** “Connect to Cursor / Claude / Agents”
+
+**Requirements:**
+
+- Export entire project as **single JSON file** (`project-vibecoder-export.json`) containing:
+  - Documentation (all three sections)
+  - Task list (ordered)
+  - Every task + its agent prompt
+- **Optional REST API endpoint** (`/api/projects/:id/tasks`) that external agents can poll:
+  - GET next uncompleted task + its prompt
+  - POST `/complete` to mark task done and get next one
+- This enables Cursor, Claude Projects, custom agents, or any “MCP-compatible” tool to connect and start executing automatically.
+
+(If “MCP” refers to a specific protocol you know — please clarify the exact acronym/spec and I’ll refine this section.)
+
+---
+
+### 5. OpenRouter Model Strategy (your request #1)
+
+**Recommended mapping (configurable in `lib/ai/models.ts`):**
+
+| Stage                       | Recommended Model (OpenRouter ID)     | Reason                             | Fallback       |
+| --------------------------- | ------------------------------------- | ---------------------------------- | -------------- |
+| Interview dynamic questions | anthropic/claude-3-5-sonnet-20241022  | Best reasoning & conversation      | claude-3-haiku |
+| Project + Goals (Hit 1)     | anthropic/claude-3-5-sonnet-20241022  | Creative + structured writing      | gpt-4o         |
+| Design Guidelines (Hit 2)   | anthropic/claude-3-5-sonnet-20241022  | Excellent at visual/language specs | gemini-flash   |
+| Tech Stack (Hit 3)          | deepseek/deepseek-r1 or openai/gpt-4o | Strong coding knowledge            | grok-beta      |
+| Task List + Prompts         | anthropic/claude-3-5-sonnet-20241022  | Best at breaking down work         | gpt-4o         |
+
+- Store model choices in a simple config object so you can A/B test later.
+- Add cost tracking per project.
+
+---
+
+### 6. Technical Architecture (Bun + Nuxt 4)
+
+- **Backend:** Bun with Elysia under /backend
+- **Framework:** Nuxt 4 under /frontend
+- **Database:** Drizzle ORM + Postrgres
+- **Auth:** BetterAuth.
+- **UI:** Tailwind + Vueshadcn
+- **AI Layer:** Server-only API routes that call OpenRouter (never expose API key)
+
+**Folder structure (Cursor should follow this exactly):**
+
+```
+BACKEND FOLDER STRUCTURE
+src/
+├── db/                          # Drizzle ORM layer (keep your current files)
+│   ├── schema/
+│   │   ├── index.ts
+│   │   ├── user.ts
+│   │   ├── project.ts           # ← will add
+│   │   ├── task.ts              # ← will add
+│   │   └── task-prompt.ts       # ← will add
+│   ├── index.ts
+│   └── reset.ts
+
+├── modules/                     # Feature modules (Project, Task, Generate, etc.)
+│   ├── project/
+│   │   ├── project.controller.ts
+│   │   ├── project.route.ts
+│   │   └── project.schema.ts
+│   ├── task/
+│   ....
+
+├── lib/
+│   └── ai/
+│       ├── client.ts
+│       ├── models.ts
+│       └── prompts/
+│── services/
+│   │   ├── auth.ts
+│   │   ├── email.ts
+│   │   └── ...
+├── plugins/                     # ← MIDDLEWARE GOES HERE
+│   ├── auth.plugin.ts           # JWT / session authentication
+│   ├── logger.plugin.ts         # Request logging
+│   ├── cors.plugin.ts           # CORS configuration
+│   ├── rate-limit.plugin.ts     # Rate limiting for AI calls
+│   ├── error.plugin.ts          # Global error handler
+│   └── security.plugin.ts       # Security headers, etc.
+
+├── app.ts                       # Main Elysia app composition
+├── index.ts                     # Bun entry point
+├── env.ts                       # Environment validation
+└── types.ts
+---
+```
+
+```
+FRONTEND FOLDER STRUCTURE
+frontend/                          # Your current Nuxt 4 project root
+├── app/
+│   ├── assets/
+│   │   ├── icons/
+│   │   └── images/
+│   │
+│   ├── components/
+│   │   ├── ui/                    # Reusable UI components (shadcn-like)
+│   │   │   ├── Button.vue
+│   │   │   ├── Card.vue
+│   │   │   ├── Input.vue
+│   │   │   └── ...
+│   │   │
+│   │   ├── use/                # General purpose
+│   │   │   ├── layout
+│   │   │   └── ...
+│   │
+│   ├── composables/
+│   │   ├── services               # put api call here
+│   │   ├──── useAuth.ts
+│   │   ├── ....ts									# put general purpose composable here like utils
+│   │
+│   ├── layouts/
+│   │   ├── default.vue
+│   │   ├── landing.vue
+│   │   └── app.vue                # Main authenticated layout
+│   │
+│   ├── lib/
+│   │   └── utils.ts               # General utilities
+│   │
+│   ├── middleware/
+│   │   └── auth.ts                # Route protection
+│   │
+│   ├── pages/
+│   │   ├── index.vue              # Landing / Home
+│   │   ├── auth/
+│   │   │   └── login.vue
+│   │   │
+│   │   ├── projects/
+│   │   │   ├── index.vue          # List of projects
+│   │   │   ├── new.vue            # Create new project + Interview
+│   │   │   ├── [id]/
+│   │   │   │   ├── index.vue      # Documentation view (3 sections)
+│   │   │   │   ├── tasks.vue      # MVP Task List
+│   │   │   │   └── mcp.vue        # MCP / Export for Cursor/Claude
+│   │   │   └── [id]/edit.vue
+│   │   │
+│   │   ├── privacy-policy.vue
+│   │   └── terms-of-service.vue
+│   │
+│   └── plugins/
+│       ├── api.client.ts          # Nuxt plugin for API
+│       └── toast.ts
+│
+├── public/                        # Static assets
+│   └── favicon.ico
+│
+├── scripts/                       # Build / deployment scripts
+│
+├── types/                         # Global TypeScript types
+│   ├── project.ts                 # Project, Task, Documentation types
+│   ├── interview.ts
+│   └── api.ts
+│
+├── validations/                   # Zod or Valibot schemas for forms
+│   ├── project.schema.ts
+│   └── interview.schema.ts
+│
+├── i18n/                          # If you plan multi-language later
+├── node_modules/
+├── .env
+├── .env.example
+├── nuxt.config.ts
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+### 7. Non-Functional Requirements
+
+- All AI calls must be streamed where possible (great UX)
+- Rate-limit & cost guardrails (show estimated cost before big generations)
+- Fully responsive (mobile-friendly interview)
+- Dark mode by default (vibe coders love it)
+- Export everything as markdown + JSON at any time
+
+---
