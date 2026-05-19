@@ -30,10 +30,14 @@ export const useAuth = () => {
   }
 
   const signUp = async (name: string, email: string, password: string) => {
+    const callbackURL =
+      typeof window !== 'undefined' ? `${window.location.origin}/app` : '/app'
+
     return authClient.signUp.email({
       email,
       password,
       name,
+      callbackURL,
     })
   }
 

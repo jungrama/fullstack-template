@@ -9,6 +9,18 @@ import {
 
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "http://localhost:3092";
 
+/** After verify-email, redirect to the app (not BACKEND_ORIGIN). */
+function withVerificationCallback(
+  url: string,
+  callbackURL = `${FRONTEND_ORIGIN}/app`,
+) {
+  const parsed = new URL(url);
+  if (!parsed.searchParams.has("callbackURL")) {
+    parsed.searchParams.set("callbackURL", callbackURL);
+  }
+  return parsed.toString();
+}
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg" }),
   secret: process.env.BETTER_AUTH_SECRET,
@@ -38,7 +50,7 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       await sendVerificationEmailMail({
         to: user.email,
-        verificationUrl: url,
+        verificationUrl: withVerificationCallback(url),
         userName: user.name ?? undefined,
       });
     },
