@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ThemeToggle from '@/components/use/layout/ThemeToggle.vue'
+import MotionFooter from '@/components/ui/motion-footer.vue'
 
 const mobileMenuOpen = ref(false)
 const config = useRuntimeConfig()
@@ -146,86 +147,6 @@ const closeMobileMenu = () => {
     <!-- Page Content -->
     <slot />
 
-    <section class="bg-card text-card-foreground relative overflow-hidden border-t pt-24 pb-12">
-      <div class="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-        <h2 class="mb-6 text-4xl font-bold sm:text-5xl">{{ $t('landing.cta_heading') }}</h2>
-        <p class="text-muted-foreground mb-8">
-          Join thousands of user using {{ config.public.appName }}.
-        </p>
-        <Button size="lg" variant="default" class="px-8 py-6 text-lg" as-child>
-          <NuxtLink to="/sign-up">{{ $t('landing.cta_button') }}</NuxtLink>
-        </Button>
-      </div>
-      <footer class="relative z-10">
-        <div class="mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 lg:px-8">
-          <div class="mb-16 grid grid-cols-2 gap-12 md:grid-cols-4">
-            <div class="col-span-2">
-              <div class="mb-6 flex items-center gap-2 text-2xl tracking-tight">
-                <span>{{ config.public.appName }}</span>
-              </div>
-              <p class="max-w-sm font-medium">
-                The modern event platform for a new generation of host and guests. Simple, fast, and
-                social.
-              </p>
-            </div>
-            <div>
-              <h4 class="mb-6 text-xs font-bold tracking-widest uppercase">Social Media</h4>
-              <ul class="space-y-4 text-sm font-semibold">
-                <li>
-                  <a href="#" class="text-muted-foreground hover:text-primary transition-colors"
-                    >Instagram</a
-                  >
-                </li>
-                <li>
-                  <a href="#" class="text-muted-foreground hover:text-primary transition-colors"
-                    >Tiktok</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="mb-6 text-xs font-bold tracking-widest uppercase">
-                {{ $t('landing_nav.company') }}
-              </h4>
-              <ul class="space-y-4 text-sm font-semibold">
-                <!-- <li>
-                  <a href="#" class="transition-colors hover:text-indigo-400">{{ $t("landing_nav.about") }}</a>
-                </li> -->
-                <li>
-                  <NuxtLink
-                    to="/privacy-policy"
-                    class="text-muted-foreground hover:text-primary transition-colors"
-                    >{{ $t('landing_nav.privacy') }}</NuxtLink
-                  >
-                </li>
-                <li>
-                  <NuxtLink
-                    to="/terms-of-service"
-                    class="text-muted-foreground hover:text-primary transition-colors"
-                    >{{ $t('landing_nav.terms') }}
-                  </NuxtLink>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="border-border text-muted-foreground flex flex-col items-center justify-between gap-6 border-t pt-10 text-sm font-medium md:flex-row"
-          >
-            <span
-              >©{{ new Date().getFullYear() }} {{ config.public.appName }} Inc. All rights
-              reserved.</span
-            >
-          </div>
-        </div>
-      </footer>
-      <div class="relative -mt-16 h-10 w-full" aria-hidden="true">
-        <div
-          class="absolute bottom-0 left-1/2 z-0 -translate-x-1/2 translate-y-2/3"
-          aria-hidden="true"
-        >
-          <div class="h-56 w-56 rounded-full border-[20px] border-orange-500/80 blur-[80px]"></div>
-        </div>
-      </div>
-    </section>
+    <MotionFooter />
   </div>
 </template>
