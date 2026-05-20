@@ -13,9 +13,11 @@
     "lint:fix": "nuxt prepare && eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "types:api": "node scripts/generate-api-types.mjs"
+    "types:api": "node scripts/generate-api-types.mjs",
+    "openapi-ts": "openapi-ts"
   },
   "dependencies": {
+    "@hey-api/nuxt": "^0.2.1",
     "@nuxt/eslint": "1.15.1",
     "@nuxt/fonts": "0.13.0",
     "@nuxt/icon": "2.2.1",
@@ -43,6 +45,7 @@
   },
   "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48",
   "devDependencies": {
+    "@hey-api/openapi-ts": "0.97.2",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^25.2.3",
     "prettier": "^3.8.1",

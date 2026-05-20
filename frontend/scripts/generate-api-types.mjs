@@ -5,16 +5,15 @@ import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, "..");
 
-// Load Environment Variables
 const envPath = join(projectRoot, ".env");
 if (existsSync(envPath)) {
-  const env = readFileSync(envPath, "utf-8");
-  for (const line of env.split("\n")) {
-    const [key, ...vals] = line.split("=");
+  for (const line of readFileSync(envPath, "utf-8").split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const [key, ...vals] = trimmed.split("=");
     if (key && !process.env[key.trim()]) {
       process.env[key.trim()] = vals
         .join("=")
@@ -25,27 +24,25 @@ if (existsSync(envPath)) {
 }
 
 const apiUrl = process.env.NUXT_PUBLIC_API_URL || process.env.API_URL;
-
 if (!apiUrl) {
   console.error("Error: API URL not found in environment variables.");
-  console.error("Please set either NUXT_PUBLIC_API_URL or API_URL environment variable.");
+  console.error("Please set NUXT_PUBLIC_API_URL or API_URL (see .env.example).");
   process.exit(1);
 }
 
-// Construct the OpenAPI endpoint URL
 const openApiUrl = `${apiUrl}/openapi/json`;
-const outputPath = join(projectRoot, "app/types/api.ts");
-
-console.log(`Generating API types from: ${openApiUrl}`);
-console.log(`Output: ${outputPath}`);
+console.log(`Generating API client from: ${openApiUrl}`);
+console.log(`Output: ${join(projectRoot, "app/api")}`);
 
 try {
-  execSync(`openapi-typescript "${openApiUrl}" -o "${outputPath}"`, {
+  execSync("pnpm exec openapi-ts", {
     cwd: projectRoot,
     stdio: "inherit",
+    env: process.env,
   });
-  console.log("✅ API types generated successfully!");
+  console.log("API client generated successfully.");
 } catch (error) {
-  console.error("❌ Failed to generate API types:", error.message);
+  const message = error instanceof Error ? error.message : String(error);
+  console.error("Failed to generate API client:", message);
   process.exit(1);
 }
