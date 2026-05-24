@@ -8,5 +8,10 @@ export default defineConfig({
     path: 'app/client',
     clean: true,
   },
-  plugins: ['@hey-api/client-nuxt'],
+  plugins: [
+    {
+      bundle: true,
+      name: '@hey-api/client-nuxt',
+    },
+  ],
 })

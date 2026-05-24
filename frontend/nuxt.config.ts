@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
-    '@hey-api/nuxt',
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/icon',

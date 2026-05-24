@@ -12,7 +12,8 @@
     "lint": "nuxt prepare && eslint .",
     "lint:fix": "nuxt prepare && eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "generate:api": "openapi-ts"
   },
   "dependencies": {
     "@hey-api/nuxt": "^0.2.1",
