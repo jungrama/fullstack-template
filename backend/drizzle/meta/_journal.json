@@ -15,6 +15,13 @@
       "when": 1779200617408,
       "tag": "0001_harsh_kree",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779285115592,
+      "tag": "0002_modern_lilith",
+      "breakpoints": true
     }
   ]
 }

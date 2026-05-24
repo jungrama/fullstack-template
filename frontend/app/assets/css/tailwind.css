@@ -2,7 +2,10 @@
 @import "tw-animate-css";
 @import url("https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@8..144,300..800&display=swap");
 
+/* Scan all app source (pages, components, composables) */
 @source "../../**/*.{vue,js,ts,jsx,tsx,md}";
+/* Fallback for monorepo root / external volume paths */
+@source "../../../**/*.{vue,js,ts,jsx,tsx,md}";
 
 @custom-variant dark (&:is(.dark *));
 

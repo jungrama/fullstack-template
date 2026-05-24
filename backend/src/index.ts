@@ -1,13 +1,15 @@
 import { mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { Elysia, status } from "elysia";
+import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
 import { logger, fileLogger } from "@bogeychan/elysia-logger";
 import { rateLimit } from "elysia-rate-limit";
-import { auth } from "./services/auth";
+import { authMacro, authRoutes } from "./plugins/auth";
 import { health } from "./routes/health";
 import { account } from "./routes/account";
+import { companies } from "./routes/companies";
+import { me } from "./routes/me";
 
 const PORT = Number(process.env.PORT) || 3000;
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN ?? "http://localhost:3092";
@@ -19,18 +21,6 @@ const loggerPlugin = isDev
   ? logger({ level: "info" })
   : fileLogger({ file: join(logDir, "app.log"), level: "info" });
 
-const betterAuthPlugin = new Elysia({ name: "better-auth" })
-  .mount(auth.handler)
-  .macro({
-    auth: {
-      async resolve({ status: setStatus, request }) {
-        const session = await auth.api.getSession({ headers: request.headers });
-        if (!session) return setStatus(401);
-        return { user: session.user, session: session.session };
-      },
-    },
-  });
-
 const app = new Elysia()
   .use(loggerPlugin)
   .use(
@@ -39,7 +29,11 @@ const app = new Elysia()
       max: 100,
       skip: (req) => {
         const url = new URL(req.url);
-        return url.pathname === "/" || url.pathname.startsWith("/openapi");
+        return (
+          url.pathname === "/" ||
+          url.pathname.startsWith("/openapi") ||
+          url.pathname.endsWith("/get-session")
+        );
       },
     }),
   )
@@ -54,20 +48,28 @@ const app = new Elysia()
   .use(
     openapi({
       documentation: {
-        info: { title: "Backend API", version: "1.0.0" },
+        info: {
+          title: "Backend API",
+          version: "1.0.0",
+          description:
+            "App API routes. Auth endpoints live under /api/auth (better-auth) and are not listed here.",
+        },
+      },
+      // Absolute path so Scalar still loads when visiting /openapi/ (trailing slash)
+      specPath: "/openapi/json",
+      scalar: {
+        spec: {
+          url: "/openapi/json",
+        },
       },
     }),
   )
-  .use(betterAuthPlugin)
+  .use(authMacro)
+  .use(authRoutes)
   .use(health)
   .use(account)
-  .get("/me", ({ user }) => user, {
-    auth: true,
-    detail: {
-      summary: "Get current user",
-      description: "Returns the authenticated user (requires session).",
-    },
-  })
+  .use(companies)
+  .use(me)
   .listen(PORT);
 
 app.server?.listening &&

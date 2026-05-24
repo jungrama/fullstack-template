@@ -1,8 +1,10 @@
 import { Elysia, t } from "elysia";
+import { authMacro } from "../plugins/auth";
 import { auth } from "../services/auth";
 import { getSignedObjectUrl, uploadAvatarToStorage } from "../services/storage";
 
 export const account = new Elysia({ prefix: "/account" })
+  .use(authMacro)
   .post(
     "/set-password",
     async ({ body, request, status }) => {
@@ -33,6 +35,7 @@ export const account = new Elysia({ prefix: "/account" })
         newPassword: t.String({ minLength: 8 }),
       }),
       detail: {
+        tags: ["Account"],
         summary: "Set password for authenticated user",
         description:
           "Sets initial password for users without credential account. Requires an active session.",
@@ -78,6 +81,7 @@ export const account = new Elysia({ prefix: "/account" })
         file: t.File(),
       }),
       detail: {
+        tags: ["Account"],
         summary: "Upload avatar to Cloudflare R2",
         description: "Uploads user avatar and returns public URL.",
       },
@@ -102,6 +106,7 @@ export const account = new Elysia({ prefix: "/account" })
         key: t.String({ minLength: 1 }),
       }),
       detail: {
+        tags: ["Account"],
         summary: "Get signed URL for stored avatar key",
         description: "Returns time-limited signed URL for a private avatar object.",
       },

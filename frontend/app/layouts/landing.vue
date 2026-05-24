@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ThemeToggle from '@/components/use/layout/ThemeToggle.vue'
-import MotionFooter from '@/components/ui/motion-footer.vue'
+import { MotionFooter } from '@/components/ui/motion-footer'
 
 const mobileMenuOpen = ref(false)
 const config = useRuntimeConfig()

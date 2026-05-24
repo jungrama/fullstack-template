@@ -2,7 +2,7 @@
 
 import type { Client, Composable, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetAccountAvatarUrlData, GetCompaniesData, GetCompaniesResponse, GetIndexData, GetMeData, PostAccountAvatarData, PostAccountSetPasswordData, PostCompaniesData, PostCompaniesError, PostCompaniesResponse } from './types.gen';
+import type { GetAccountAvatarUrlData, GetCompaniesByCompanyIdLogoUrlData, GetCompaniesByCompanyIdLogoUrlError, GetCompaniesByCompanyIdLogoUrlResponse, GetCompaniesBySlugBySlugData, GetCompaniesBySlugBySlugError, GetCompaniesBySlugBySlugResponse, GetCompaniesData, GetCompaniesResponse, GetIndexData, GetMeData, PostAccountAvatarData, PostAccountSetPasswordData, PostCompaniesByCompanyIdLogoData, PostCompaniesByCompanyIdLogoError, PostCompaniesByCompanyIdLogoResponse, PostCompaniesData, PostCompaniesError, PostCompaniesResponse } from './types.gen';
 
 export type Options<TComposable extends Composable = '$fetch', TData extends TDataShape = TDataShape, ResT = unknown, DefaultT = undefined> = Options2<TComposable, TData, ResT, DefaultT> & {
     /**
@@ -80,6 +80,34 @@ export const postCompanies = <TComposable extends Composable = '$fetch', Default
         ...options.headers
     }
 });
+
+/**
+ * Get company by slug
+ *
+ * Returns a company the user belongs to, matched by URL slug.
+ */
+export const getCompaniesBySlugBySlug = <TComposable extends Composable = '$fetch', DefaultT extends GetCompaniesBySlugBySlugResponse = GetCompaniesBySlugBySlugResponse>(options: Options<TComposable, GetCompaniesBySlugBySlugData, GetCompaniesBySlugBySlugResponse, DefaultT>) => (options.client ?? client).get<TComposable, GetCompaniesBySlugBySlugResponse | DefaultT, GetCompaniesBySlugBySlugError, DefaultT>({ url: '/companies/by-slug/{slug}', ...options });
+
+/**
+ * Upload company logo
+ *
+ * Uploads a logo image for a company. Requires owner or admin role.
+ */
+export const postCompaniesByCompanyIdLogo = <TComposable extends Composable = '$fetch', DefaultT extends PostCompaniesByCompanyIdLogoResponse = PostCompaniesByCompanyIdLogoResponse>(options: Options<TComposable, PostCompaniesByCompanyIdLogoData, PostCompaniesByCompanyIdLogoResponse, DefaultT>) => (options.client ?? client).post<TComposable, PostCompaniesByCompanyIdLogoResponse | DefaultT, PostCompaniesByCompanyIdLogoError, DefaultT>({
+    url: '/companies/{companyId}/logo',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get signed URL for company logo
+ *
+ * Returns a time-limited signed URL for the company's stored logo.
+ */
+export const getCompaniesByCompanyIdLogoUrl = <TComposable extends Composable = '$fetch', DefaultT extends GetCompaniesByCompanyIdLogoUrlResponse = GetCompaniesByCompanyIdLogoUrlResponse>(options: Options<TComposable, GetCompaniesByCompanyIdLogoUrlData, GetCompaniesByCompanyIdLogoUrlResponse, DefaultT>) => (options.client ?? client).get<TComposable, GetCompaniesByCompanyIdLogoUrlResponse | DefaultT, GetCompaniesByCompanyIdLogoUrlError, DefaultT>({ url: '/companies/{companyId}/logo-url', ...options });
 
 /**
  * Get current user

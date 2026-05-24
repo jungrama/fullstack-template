@@ -29,17 +29,6 @@ export default defineNuxtConfig({
     dirs: ['./app/composables/**'],
   },
   css: ['~/assets/css/tailwind.css'],
-  vite: {
-    plugins: [
-      tailwindcss({
-        // Explicitly tell Tailwind where to find source files
-        // The @source directive in CSS should handle this, but this ensures it works
-      }) as any,
-    ],
-    server: {
-      allowedHosts: ['dev.mainlabs.online'],
-    },
-  },
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL,
@@ -63,5 +52,29 @@ export default defineNuxtConfig({
   i18n: {
     locales: [{ code: 'en', name: 'English', file: 'en.json' }],
     strategy: 'no_prefix',
+  },
+  vite: {
+    plugins: [tailwindcss() as any],
+    server: {
+      allowedHosts: ['dev.mainlabs.online'],
+    },
+    ssr: {
+      noExternal: ['vue', 'vue-router', '@vueuse/core', 'reka-ui'],
+    },
+  },
+  // Bundle Vue into the server build — avoids Node ESM "no default export" at preview/runtime
+  nitro: {
+    externals: {
+      inline: [
+        'vue',
+        'vue-router',
+        '@vue/shared',
+        '@vue/reactivity',
+        '@vue/runtime-core',
+        '@vue/runtime-dom',
+        '@vue/server-renderer',
+        '@vue/compiler-dom',
+      ],
+    },
   },
 })

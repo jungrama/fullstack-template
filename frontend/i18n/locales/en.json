@@ -318,5 +318,95 @@
   "ui": {
     "toggle_menu": "Toggle menu",
     "close_menu": "Close menu"
+  },
+  "companies": {
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+    },
+    "picker": {
+      "title": "Choose a workspace",
+      "subtitle": "Pick a company to open, or create a new one.",
+      "createTile": "New workspace",
+      "createTitle": "Create workspace",
+      "createDescription": "Give your company a name to get started.",
+      "name": "Company name",
+      "namePlaceholder": "Acme Inc.",
+      "createSubmit": "Create",
+      "createSuccess": "Workspace created.",
+      "empty": "You are not a member of any company yet.",
+      "logoOptional": "Optional — add a workspace icon",
+      "logoInvalidType": "Please choose a JPEG, PNG, WebP, or GIF image.",
+      "logoUpdated": "Workspace icon updated.",
+      "uploadLogo": "Upload workspace icon"
+    }
+  },
+  "projects": {
+    "welcome": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening",
+      "title": "{company} projects",
+      "workspace": "Your workspace",
+      "subtitle": "Track progress, cash flow, and schedule health across every job site."
+    },
+    "newProject": "New project",
+    "newProjectToast": "Project creation will be available soon.",
+    "listTitle": "All projects",
+    "searchPlaceholder": "Search by name or location…",
+    "emptyTitle": "No projects match your filters",
+    "emptySubtitle": "Try another search or filter, or create a new project.",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "atRisk": "At risk",
+      "planning": "Planning",
+      "onHold": "On hold",
+      "completed": "Completed"
+    },
+    "stats": {
+      "activeProjects": "Active projects",
+      "avgProgress": "Avg. progress",
+      "portfolioValue": "Portfolio value",
+      "needsAttention": "Needs attention",
+      "projects": "projects",
+      "attentionDetail": "{overdue} overdue tasks · {payments} pending payments"
+    },
+    "status": {
+      "active": "Active",
+      "planning": "Planning",
+      "on_hold": "On hold",
+      "completed": "Completed",
+      "at_risk": "At risk"
+    },
+    "schedule": {
+      "on_track": "On schedule",
+      "at_risk": "At risk",
+      "delayed": "Delayed"
+    },
+    "card": {
+      "progress": "Progress",
+      "contractValue": "Contract value",
+      "budgetUsed": "Budget used",
+      "cashFlow": "Cash flow (month)",
+      "profitMargin": "Est. margin",
+      "daysLeft": "Days left",
+      "openTasks": "Open tasks",
+      "pendingPayments": "Pending pay.",
+      "teamOnSite": "{count} on site"
+    }
+  },
+  "onboarding": {
+    "company": {
+      "title": "Create your company",
+      "subtitle": "Set up your workspace before using the app.",
+      "name": "Company name",
+      "namePlaceholder": "Acme Inc.",
+      "submit": "Create company",
+      "success": "Company created successfully.",
+      "alreadyHasCompany": "You already have a company. Taking you to the app."
+    }
   }
 }

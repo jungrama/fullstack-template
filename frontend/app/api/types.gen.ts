@@ -52,7 +52,10 @@ export type GetCompaniesResponses = {
     200: Array<{
         id: string;
         name: string;
+        slug: string;
         role: 'owner' | 'admin' | 'member' | 'viewer';
+        logoKey: string | unknown;
+        logoUrl: string | unknown;
     }>;
 };
 
@@ -87,11 +90,149 @@ export type PostCompaniesResponses = {
     200: {
         id: string;
         name: string;
+        slug: string;
         role: 'owner' | 'admin' | 'member' | 'viewer';
+        logoKey: string | unknown;
+        logoUrl: string | unknown;
     };
 };
 
 export type PostCompaniesResponse = PostCompaniesResponses[keyof PostCompaniesResponses];
+
+export type GetCompaniesBySlugBySlugData = {
+    body?: never;
+    path: {
+        slug: string;
+    };
+    query?: never;
+    url: '/companies/by-slug/{slug}';
+};
+
+export type GetCompaniesBySlugBySlugErrors = {
+    /**
+     * Response for status 404
+     */
+    404: {
+        message: string;
+    };
+};
+
+export type GetCompaniesBySlugBySlugError = GetCompaniesBySlugBySlugErrors[keyof GetCompaniesBySlugBySlugErrors];
+
+export type GetCompaniesBySlugBySlugResponses = {
+    /**
+     * UserCompany
+     *
+     * Response for status 200
+     */
+    200: {
+        id: string;
+        name: string;
+        slug: string;
+        role: 'owner' | 'admin' | 'member' | 'viewer';
+        logoKey: string | unknown;
+        logoUrl: string | unknown;
+    };
+};
+
+export type GetCompaniesBySlugBySlugResponse = GetCompaniesBySlugBySlugResponses[keyof GetCompaniesBySlugBySlugResponses];
+
+export type PostCompaniesByCompanyIdLogoData = {
+    body: {
+        file: Blob | File;
+    };
+    path: {
+        companyId: string;
+    };
+    query?: never;
+    url: '/companies/{companyId}/logo';
+};
+
+export type PostCompaniesByCompanyIdLogoErrors = {
+    /**
+     * Response for status 400
+     */
+    400: {
+        message: string;
+    };
+    /**
+     * Response for status 403
+     */
+    403: {
+        message: string;
+    };
+    /**
+     * Response for status 404
+     */
+    404: {
+        message: string;
+    };
+    /**
+     * Response for status 500
+     */
+    500: {
+        message: string;
+    };
+};
+
+export type PostCompaniesByCompanyIdLogoError = PostCompaniesByCompanyIdLogoErrors[keyof PostCompaniesByCompanyIdLogoErrors];
+
+export type PostCompaniesByCompanyIdLogoResponses = {
+    /**
+     * UserCompany
+     *
+     * Response for status 200
+     */
+    200: {
+        id: string;
+        name: string;
+        slug: string;
+        role: 'owner' | 'admin' | 'member' | 'viewer';
+        logoKey: string | unknown;
+        logoUrl: string | unknown;
+    };
+};
+
+export type PostCompaniesByCompanyIdLogoResponse = PostCompaniesByCompanyIdLogoResponses[keyof PostCompaniesByCompanyIdLogoResponses];
+
+export type GetCompaniesByCompanyIdLogoUrlData = {
+    body?: never;
+    path: {
+        companyId: string;
+    };
+    query: {
+        key: string;
+    };
+    url: '/companies/{companyId}/logo-url';
+};
+
+export type GetCompaniesByCompanyIdLogoUrlErrors = {
+    /**
+     * Response for status 403
+     */
+    403: {
+        message: string;
+    };
+    /**
+     * Response for status 500
+     */
+    500: {
+        message: string;
+    };
+};
+
+export type GetCompaniesByCompanyIdLogoUrlError = GetCompaniesByCompanyIdLogoUrlErrors[keyof GetCompaniesByCompanyIdLogoUrlErrors];
+
+export type GetCompaniesByCompanyIdLogoUrlResponses = {
+    /**
+     * Response for status 200
+     */
+    200: {
+        url: string;
+    };
+};
+
+export type GetCompaniesByCompanyIdLogoUrlResponse = GetCompaniesByCompanyIdLogoUrlResponses[keyof GetCompaniesByCompanyIdLogoUrlResponses];
 
 export type GetMeData = {
     body?: never;

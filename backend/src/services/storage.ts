@@ -46,6 +46,28 @@ export async function uploadAvatarToStorage(params: {
   return { key };
 }
 
+export async function uploadCompanyLogoToStorage(params: {
+  companyId: string;
+  file: File;
+}): Promise<{ key: string }> {
+  const { client, bucket } = assertR2Configured();
+  const ext = (params.file.name?.split(".").pop() || "jpg").toLowerCase();
+  const key = `companies/${params.companyId}/${randomUUID()}.${ext}`;
+  const bytes = Buffer.from(await params.file.arrayBuffer());
+
+  await client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: bytes,
+      ContentType: params.file.type || "application/octet-stream",
+      CacheControl: "private, max-age=0, no-cache",
+    }),
+  );
+
+  return { key };
+}
+
 export async function getSignedObjectUrl(
   key: string,
   expiresInSeconds = 60 * 10,
