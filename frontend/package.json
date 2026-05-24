@@ -12,8 +12,7 @@
     "lint": "nuxt prepare && eslint .",
     "lint:fix": "nuxt prepare && eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "types:api": "node scripts/generate-api-types.mjs"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@hey-api/nuxt": "^0.2.1",
