@@ -6,9 +6,6 @@
 .cache
 dist
 
-# Hey API generated client
-app/client/
-
 # Node dependencies
 node_modules
 

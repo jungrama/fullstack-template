@@ -10,7 +10,6 @@ export default defineConfig({
   },
   plugins: [
     {
-      bundle: true,
       name: '@hey-api/client-nuxt',
     },
   ],
